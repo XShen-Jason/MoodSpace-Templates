@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ magic_title }}</title>
+    <style>
+        :root {
+            --parchment: #d4b483;
+            --ink-dark: #3e2723;
+            --gold-glow: #ffc107;
+            --magic-red: #880e4f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a0f0a; /* 暗黑背景 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: "Georgia", serif;
+        }
+
+        /* 旋转魔法阵背景 */
+        .magic-circle {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border: 2px dashed var(--gold-glow);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: rotateCircle 20s linear infinite;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .magic-circle::before {
+            content: "★ ⚝ ☸ ✺ ✧ ❂ ❈ ❉";
+            color: var(--gold-glow);
+            font-size: 20px;
+            letter-spacing: 50px;
+        }
+
+        /* 羊皮纸契约主体 */
+        .parchment-contract {
+            width: 90%;
+            max-width: 500px;
+            background: var(--parchment);
+            background-image: url('https://www.transparenttextures.com/patterns/p6.png');
+            padding: 50px 30px;
+            border: 15px solid transparent;
+            border-image: url('https://www.transparenttextures.com/patterns/dark-leather.png') 30 round;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 100px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 10;
+            animation: scrollFadeIn 1.5s ease-out;
+            transform: rotate(-1deg);
+        }
+
+        /* 契约边缘烧焦效果 */
+        .parchment-contract::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            box-shadow: inset 0 0 40px #5d4037;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--ink-dark);
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            letter-spacing: 5px;
+            border-bottom: 2px double var(--ink-dark);
+            display: inline-block;
+            width: 100%;
+        }
+
+        .content {
+            font-size: 1.2rem;
+            color: var(--ink-dark);
+            line-height: 2;
+            text-align: center;
+            white-space: pre-line;
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+
+        /* 签名区域 */
+        .signature-area {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            border-top: 1px solid rgba(62, 39, 35, 0.3);
+            padding-top: 20px;
+        }
+
+        .sign-block {
+            text-align: center;
+        }
+
+        .sign-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #5d4037;
+            margin-bottom: 10px;
+        }
+
+        .sign-name {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 1.5rem;
+            color: var(--magic-red);
+            border-bottom: 1px solid var(--ink-dark);
+            min-width: 100px;
+        }
+
+        /* 交互按钮 */
+        .magic-btn {
+            display: block;
+            width: 180px;
+            margin: 40px auto 0;
+            padding: 12px;
+            background: var(--ink-dark);
+            color: var(--gold-glow);
+            border: 2px solid var(--gold-glow);
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
+        }
+
+        .magic-btn:hover {
+            background: var(--magic-red);
+            box-shadow: 0 0 25px var(--gold-glow);
+            transform: scale(1.05);
+        }
+
+        /* 动画 */
+        @keyframes rotateCircle {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes scrollFadeIn {
+            from { opacity: 0; transform: translateY(50px) rotate(2deg); }
+            to { opacity: 1; transform: translateY(0) rotate(-1deg); }
+        }
+
+        /* 成功弹窗 */
+        #magic-modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(26, 15, 10, 0.95);
+            color: var(--gold-glow);
+            padding: 40px;
+            border: 2px solid var(--gold-glow);
+            z-index: 100;
+            text-align: center;
+            box-shadow: 0 0 100px var(--magic-red);
+        }
+
+        @media (max-width: 500px) {
+            h1 { font-size: 1.8rem; }
+            .content { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="magic-circle"></div>
+
+    <div class="parchment-contract">
+        <h1>{{ magic_title }}</h1>
+        
+        <div class="content">
+            {{ contract_content }}
+        </div>
+
+        <div class="signature-area">
+            <div class="sign-block">
+                <div class="sign-label">甲方 (Contractor)</div>
+                <div class="sign-name">{{ signer_a }}</div>
+            </div>
+            <div class="sign-block">
+                <div class="sign-label">乙方 (Partner)</div>
+                <div class="sign-name">{{ signer_b }}</div>
+            </div>
+        </div>
+
+        <button class="magic-btn" onclick="activateContract()">启动永恒契约</button>
+    </div>
+
+    <div id="magic-modal">
+        <h2 style="font-size: 2rem;">契约已成</h2>
+        <p style="margin-top:15px; letter-spacing: 2px;">灵魂绑定程序启动，爱意永不磨灭。</p>
+        <button onclick="closeModal()" style="margin-top:20px; background:none; border:1px solid #fff; color:#fff; padding:5px 15px; cursor:pointer;">解除遮罩</button>
+    </div>
+
+    <script>
+        function activateContract() {
+            // 触发点击特效：背景变红闪烁
+            document.body.style.background = "#4a0000";
+            setTimeout(() => {
+                document.body.style.background = "#1a0f0a";
+                document.getElementById('magic-modal').style.display = 'block';
+            }, 500);
+            
+            // 手机震动
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        }
+
+        function closeModal() {
+            document.getElementById('magic-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
