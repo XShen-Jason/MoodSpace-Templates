@@ -1,6 +1,8 @@
 {
   "name": "anniversary",
   "title": "周年纪念",
+  "tier": "pro",
+  "price": 18,
   "version": "1.1.0",
   "static": false,
   "fields": [

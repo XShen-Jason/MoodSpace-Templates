@@ -1,6 +1,8 @@
 {
   "name": "starry_confession",
   "title": "星空告白",
+  "tier": "pro",
+  "price": 9.9,
   "fields": [
     { "id": "page_title", "label": "页面标题（浏览器标题）", "default": "星空告白 · 浪漫空间", "type": "text" },
     { "id": "headline", "label": "主标题", "default": "星空告白", "type": "text" },

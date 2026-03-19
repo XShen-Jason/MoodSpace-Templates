@@ -1,6 +1,7 @@
 {
   "name": "love_letter",
   "title": "浪漫情书",
+  "price": 4.9,
   "version": "1.1.0",
   "static": false,
   "fields": [
