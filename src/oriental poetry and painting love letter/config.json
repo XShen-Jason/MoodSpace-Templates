@@ -1,0 +1,30 @@
+{
+  "name": "oriental_poetry_letter",
+  "title": "东方诗画情书",
+  "fields": [
+    {
+      "id": "scroll_title",
+      "label": "卷轴标题 (毛笔字)",
+      "default": "与君书",
+      "type": "text"
+    },
+    {
+      "id": "poetry_main",
+      "label": "主诗词/告白 (竖排)",
+      "default": "南风知我意，吹梦到西洲。\n山水万程，皆要好运；\n朝暮与年岁，共往与君行。",
+      "type": "textarea"
+    },
+    {
+      "id": "signature_name",
+      "label": "落款姓名",
+      "default": "某某 敬书",
+      "type": "text"
+    },
+    {
+      "id": "seal_text",
+      "label": "印章文字 (建议两个字)",
+      "default": "良缘",
+      "type": "text"
+    }
+  ]
+}
