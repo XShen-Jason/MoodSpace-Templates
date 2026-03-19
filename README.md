@@ -82,7 +82,7 @@
 ## 🛠️ 本地调试与手动上传
 
 1. **安装环境**：`npm install`
-2. **配置环境**：创建 `.env` 并填写 `RS_ADMIN_KEY`。可选配置 `RS_WORKER_URL=https://api.885201314.xyz`。
+2. **配置环境**：创建 `.env` 并填写 `RS_ADMIN_KEY`。可选配置 `RS_WORKER_URL=https://api.moodspace.xyz`。
 3. **预览**：直接在浏览器打开 `src/模板名/index.html`（CSS/JS 需引用正确）
 4. **手动部署**：
    ```bash

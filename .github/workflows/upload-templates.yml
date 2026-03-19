@@ -40,7 +40,7 @@ jobs:
         if: steps.changed.outputs.templates != ''
         env:
           RS_ADMIN_KEY: ${{ secrets.RS_ADMIN_KEY }}
-          RS_WORKER_URL: ${{ vars.RS_WORKER_URL || 'https://api.885201314.xyz' }}
+          RS_WORKER_URL: ${{ vars.RS_WORKER_URL || secrets.RS_WORKER_URL || 'https://api.moodspace.xyz' }}
         run: |
           IFS=',' read -ra TMPL_LIST <<< "${{ steps.changed.outputs.templates }}"
           for tmpl in "${TMPL_LIST[@]}"; do

@@ -5,13 +5,13 @@
  *
  * Environment variables:
  *   RS_ADMIN_KEY   — Admin secret key (required)
- *   RS_WORKER_URL  — Worker URL (default: https://api.885201314.xyz)
+ *   RS_WORKER_URL  — Worker URL (default: https://api.moodspace.xyz)
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const WORKER_URL = process.env.RS_WORKER_URL ?? 'https://api.885201314.xyz';
+const WORKER_URL = process.env.RS_WORKER_URL ?? 'https://api.moodspace.xyz';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
