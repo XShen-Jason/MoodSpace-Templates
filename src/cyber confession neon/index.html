@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CYBER LOVE CONNECTING...</title>
+    <style>
+        :root {
+            --neon-pink: #ff007f;
+            --neon-blue: #00f3ff;
+            --bg-dark: #050505;
+            --glass-cyan: rgba(0, 243, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--neon-blue);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 背景：扫描线效果 */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .cyber-container {
+            position: relative;
+            z-index: 5;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* 霓虹大标题 */
+        .neon-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 
+                0 0 7px #fff,
+                0 0 10px #fff,
+                0 0 21px var(--neon-pink),
+                0 0 42px var(--neon-pink),
+                0 0 82px var(--neon-pink);
+            animation: flicker 2s infinite alternate;
+            margin-bottom: 30px;
+            letter-spacing: 4px;
+        }
+
+        /* 代码流容器 */
+        .code-box {
+            background: var(--glass-cyan);
+            backdrop-filter: blur(5px);
+            border-left: 3px solid var(--neon-blue);
+            padding: 25px;
+            margin-bottom: 40px;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .code-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            text-align: left;
+            white-space: pre-line;
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        /* 心跳波形模拟 */
+        .heartbeat-line {
+            height: 50px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent 0%, var(--neon-pink) 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: pulse 1.5s infinite linear;
+            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><path d="M0 10 L30 10 L35 0 L45 20 L50 10 L100 10" stroke="black" fill="transparent"/></svg>');
+            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><path d="M0 10 L30 10 L35 0 L45 20 L50 10 L100 10" stroke="black" fill="transparent"/></svg>');
+            mask-repeat: repeat-x;
+            margin-bottom: 20px;
+        }
+
+        /* 霓虹按钮 */
+        .cyber-btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            transition: 0.3s;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .cyber-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-dark);
+            box-shadow: 0 0 30px var(--neon-blue);
+        }
+
+        .encryption-tag {
+            margin-top: 20px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            opacity: 0.6;
+        }
+
+        /* 动画 */
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px var(--neon-pink), 0 0 42px var(--neon-pink);
+            }
+            20%, 24%, 55% {       
+                text-shadow: none;
+            }
+        }
+
+        @keyframes pulse {
+            from { background-position: 200% 0; }
+            to { background-position: -200% 0; }
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            border: 1px solid var(--neon-pink);
+            padding: 30px;
+            z-index: 100;
+            box-shadow: 0 0 50px var(--neon-pink);
+        }
+
+        @media (max-width: 600px) {
+            .neon-title { font-size: 2.2rem; }
+            .code-text { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cyber-container">
+        <div class="neon-title">{{ cyber_title }}</div>
+        
+        <div class="code-box">
+            <div class="code-text" id="typewriter">
+                > INITIALIZING LOVE_PROTOCOL...
+                > {{ confession_code }}
+                > STATUS: 100% DECODED
+            </div>
+        </div>
+
+        <div class="heartbeat-line"></div>
+
+        <button class="cyber-btn" onclick="sendSignal()">{{ signal_btn_text }}</button>
+        
+        <div class="encryption-tag">{{ encryption_key }}</div>
+    </div>
+
+    <div id="modal" class="modal">
+        <h2 style="color: var(--neon-pink);">SIGNAL DELIVERED</h2>
+        <p style="margin-top:10px;">信号已穿透防火墙，送达目标。 </p>
+        <button onclick="closeModal()" style="margin-top:20px; background:transparent; color:white; border:1px solid #fff; padding:5px 10px;">CLOSE</button>
+    </div>
+
+    <script>
+        function sendSignal() {
+            document.getElementById('modal').style.display = 'block';
+            // 可以在这里添加震动反馈
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // 简单的代码流跟随效果 (移动端性能考虑)
+        document.addEventListener('mousemove', (e) => {
+            const box = document.querySelector('.code-box');
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            box.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+    </script>
+</body>
+</html>
