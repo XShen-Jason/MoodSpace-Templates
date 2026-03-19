@@ -1,0 +1,36 @@
+{
+  "name": "game_achievement_love",
+  "title": "游戏成就恋爱簿",
+  "fields": [
+    {
+      "id": "player_name",
+      "label": "玩家(昵称)",
+      "default": "Player One",
+      "type": "text"
+    },
+    {
+      "id": "love_level",
+      "label": "当前等级",
+      "default": "Lv.99",
+      "type": "text"
+    },
+    {
+      "id": "love_days",
+      "label": "恋爱天数",
+      "default": "520 Days",
+      "type": "text"
+    },
+    {
+      "id": "final_achievement",
+      "label": "终极成就文案",
+      "default": "恭喜你解锁「一生伴侣」终极成就！",
+      "type": "text"
+    },
+    {
+      "id": "rpg_quote",
+      "label": "游戏格言",
+      "default": "我们的爱情，是一场永不通关的 RPG。",
+      "type": "textarea"
+    }
+  ]
+}
