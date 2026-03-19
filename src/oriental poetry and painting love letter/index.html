@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ scroll_title }}</title>
+    <style>
+        :root {
+            --ink-black: #1a1a1a;
+            --cinnabar-red: #b22222;
+            --paper-white: #f4f1ea;
+            --border-grey: #d1ccc0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #e0ddd5;
+            /* 宣纸纹理背景 */
+            background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+            font-family: "STKaiti", "KaiTi", "楷体", serif;
+            color: var(--ink-black);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* 卷轴主体 */
+        .scroll-container {
+            width: 90%;
+            max-width: 450px;
+            margin: 40px 0;
+            background: var(--paper-white);
+            border-left: 2px solid var(--border-grey);
+            border-right: 2px solid var(--border-grey);
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            position: relative;
+            padding: 60px 40px;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: scrollUnroll 2s ease-out;
+        }
+
+        /* 卷轴上下轴 */
+        .scroll-container::before, .scroll-container::after {
+            content: "";
+            position: absolute;
+            left: -5%;
+            width: 110%;
+            height: 15px;
+            background: #4a3728;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .scroll-container::before { top: -10px; }
+        .scroll-container::after { bottom: -10px; }
+
+        /* 装饰：水墨梅花 */
+        .decoration-plum {
+            position: absolute;
+            top: 20px;
+            right: 10px;
+            width: 150px;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* 竖排标题 */
+        .title {
+            writing-mode: vertical-rl;
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin-bottom: 40px;
+            letter-spacing: 10px;
+            color: var(--ink-black);
+            border-right: 1px solid var(--cinnabar-red);
+            padding-right: 10px;
+        }
+
+        /* 竖排正文内容 */
+        .content {
+            writing-mode: vertical-rl;
+            font-size: 1.3rem;
+            line-height: 2.5;
+            letter-spacing: 4px;
+            height: 350px; /* 固定高度确保对齐 */
+            text-align: left;
+            animation: textFadeIn 3s ease-in;
+        }
+
+        /* 落款与印章 */
+        .footer {
+            margin-top: auto;
+            align-self: flex-start;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-left: 20px;
+        }
+
+        .signature {
+            writing-mode: vertical-rl;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .seal {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--cinnabar-red);
+            color: var(--cinnabar-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            writing-mode: vertical-rl;
+            padding: 5px;
+            background: rgba(178, 34, 34, 0.05);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .seal:hover {
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        /* 动画定义 */
+        @keyframes scrollUnroll {
+            from { height: 0; opacity: 0; }
+            to { height: 80vh; opacity: 1; }
+        }
+
+        @keyframes textFadeIn {
+            from { opacity: 0; filter: blur(10px); }
+            to { opacity: 1; filter: blur(0); }
+        }
+
+        /* 花瓣飘落效果容器 */
+        #petal-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @media (max-width: 500px) {
+            .title { font-size: 2rem; }
+            .content { font-size: 1.1rem; letter-spacing: 2px; height: 300px; }
+            .scroll-container { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="petal-container"></div>
+
+    <div class="scroll-container">
+        <svg class="decoration-plum" viewBox="0 0 100 100">
+            <path d="M90,10 Q70,40 40,50 T10,90" stroke="#444" fill="none" stroke-width="0.5"/>
+            <circle cx="85" cy="15" r="2" fill="#b22222" opacity="0.8"/>
+            <circle cx="75" cy="25" r="1.5" fill="#b22222" opacity="0.6"/>
+            <circle cx="65" cy="35" r="2" fill="#b22222" opacity="0.7"/>
+        </svg>
+
+        <div class="title">{{ scroll_title }}</div>
+
+        <div class="content">
+            {{ poetry_main }}
+        </div>
+
+        <div class="footer">
+            <div class="signature">{{ signature_name }}</div>
+            <div class="seal" onclick="addPetal()">{{ seal_text }}</div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟落花效果
+        function addPetal() {
+            const container = document.getElementById('petal-container');
+            for(let i=0; i<5; i++) {
+                const petal = document.createElement('div');
+                petal.innerHTML = "🌸";
+                petal.style.position = 'absolute';
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.top = '-20px';
+                petal.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                petal.style.opacity = Math.random();
+                petal.style.transition = `all ${Math.random() * 2 + 3}s linear`;
+                
+                container.appendChild(petal);
+
+                setTimeout(() => {
+                    petal.style.transform = `translate(${(Math.random()-0.5)*200}px, 100vh) rotate(${Math.random()*360}deg)`;
+                    petal.style.opacity = '0';
+                }, 100);
+
+                setTimeout(() => petal.remove(), 5000);
+            }
+        }
+
+        // 页面加载后自动飘落几片
+        window.onload = () => {
+            setTimeout(addPetal, 1000);
+        };
+    </script>
+</body>
+</html>

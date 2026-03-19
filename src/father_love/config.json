@@ -1,0 +1,44 @@
+{
+  "name": "father_love",
+  "title": "父爱书信",
+  "fields": [
+    { "id": "page_title", "label": "页面标题（浏览器标题）", "default": "父爱书信 · 浪漫空间", "type": "text" },
+    { "id": "title", "label": "主标题", "default": "写给父亲的一封信", "type": "text" },
+    { "id": "subtitle", "label": "副标题（可换行）", "default": "有些爱不善言辞，却把一生都站成你的靠山。\\n今天，把那句“谢谢你”郑重写给你。", "type": "textarea" },
+
+    { "id": "father_name", "label": "父亲姓名/称呼", "default": "爸爸", "type": "text" },
+    { "id": "child_name", "label": "子女姓名/署名", "default": "我", "type": "text" },
+    { "id": "date", "label": "日期", "default": "2026 · 06 · 21", "type": "text" },
+    { "id": "location", "label": "地点/坐标", "default": "家", "type": "text" },
+
+    { "id": "header_tagline", "label": "头部小标语", "default": "把感谢写成光，把守护写成一生。", "type": "text" },
+    { "id": "header_badge", "label": "头部徽章文案", "default": "温柔守护 · 父爱如山", "type": "text" },
+    { "id": "hero_kicker", "label": "主卡片角标", "default": "Father’s Love Letter", "type": "text" },
+
+    { "id": "primary_button_text", "label": "主按钮文案", "default": "读一读这封信", "type": "text" },
+    { "id": "secondary_button_text", "label": "次按钮文案", "default": "翻看光影纪念", "type": "text" },
+
+    { "id": "footer_whisper", "label": "主卡片底部轻语", "default": "你不说爱，但每一步都在替我挡风。", "type": "text" },
+
+    { "id": "letter_subtitle", "label": "书信区小标题", "default": "有些话，想慢慢说给你听。", "type": "text" },
+    { "id": "letter_body", "label": "书信正文", "default": "亲爱的{{ father_name }}：\\n\\n谢谢你把沉默变成肩膀，把辛苦变成日常的安稳。\\n小时候你牵着我走，长大后你仍把我放在心上。\\n\\n我想对你说：\\n你的付出我都记得，你的温柔我都懂得。\\n愿你被岁月善待，愿你永远健康、平安、快乐。\\n\\n—— {{ child_name }}", "type": "textarea" },
+
+    { "id": "moments_subtitle", "label": "记忆清单小标题", "default": "三件小事，足以照亮很多年。", "type": "text" },
+    { "id": "moment_1", "label": "记忆 1", "default": "那次下雨，你把伞倾向我，自己半边肩膀都湿了。", "type": "textarea" },
+    { "id": "moment_2", "label": "记忆 2", "default": "你不太会表达，却总在我需要时第一个出现。", "type": "textarea" },
+    { "id": "moment_3", "label": "记忆 3", "default": "你教我认真、勇敢、善良——像你一样。", "type": "textarea" },
+
+    { "id": "gallery_subtitle", "label": "图库区小标题", "default": "把回忆装进每一帧的光里。", "type": "text" },
+    { "id": "gallery_hint", "label": "图库区提示文字", "default": "填写图片链接后，这里会自动生成一排可滑动的相片卡片。", "type": "text" },
+    { "id": "gallery_chip", "label": "图库角标", "default": "左右滑动", "type": "text" },
+    { "id": "gallery_images", "label": "图库图片 URL 列表（换行或逗号分隔）", "default": "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg\\nhttps://images.pexels.com/photos/1445696/pexels-photo-1445696.jpeg\\nhttps://images.pexels.com/photos/733872/pexels-photo-733872.jpeg", "type": "textarea" },
+
+    { "id": "bg_image_url", "label": "背景大图 URL", "default": "https://images.pexels.com/photos/2911545/pexels-photo-2911545.jpeg", "type": "text" },
+    { "id": "main_color", "label": "主色（HEX）", "default": "#ffd6a5", "type": "text" },
+    { "id": "secondary_color", "label": "辅色（HEX）", "default": "#86b6ff", "type": "text" },
+
+    { "id": "music_url", "label": "背景音乐 URL（可为空）", "default": "", "type": "text" },
+    { "id": "footer_left", "label": "页脚左侧文案", "default": "写给 {{ father_name }} · 由 {{ child_name }} 亲笔", "type": "text" },
+    { "id": "footer_right", "label": "页脚右侧文案", "default": "浪漫空间 · RomanceSpace", "type": "text" }
+  ]
+}

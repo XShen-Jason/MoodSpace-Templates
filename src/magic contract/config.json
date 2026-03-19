@@ -1,0 +1,30 @@
+{
+  "name": "magic_contract_scroll",
+  "title": "魔法契约书",
+  "fields": [
+    {
+      "id": "magic_title",
+      "label": "契约大标题",
+      "default": "永恒契约",
+      "type": "text"
+    },
+    {
+      "id": "contract_content",
+      "label": "契约咒语全文",
+      "default": "以我之名，与你缔结永恒的恋爱契约。\n魔法也许会失效，但我爱你是永恒的咒语。\n此生此世，灵魂与你绑定。",
+      "type": "textarea"
+    },
+    {
+      "id": "signer_a",
+      "label": "甲方(你的名字)",
+      "default": "魔法师",
+      "type": "text"
+    },
+    {
+      "id": "signer_b",
+      "label": "乙方(TA的名字)",
+      "default": "守护者",
+      "type": "text"
+    }
+  ]
+}

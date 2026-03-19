@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ main_title }}</title>
+    <style>
+        :root {
+            --vintage-brown: #4a3728;
+            --cream-yellow: #fdf5e6;
+            --retro-red: #8b261e;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --film-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle, #2c1e16 0%, #1a0f0a 100%);
+            background-attachment: fixed;
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
+            color: var(--cream-yellow);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 复古纸张纹理叠加 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/p6.png');
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* 头部设计 */
+        header {
+            margin-bottom: 50px;
+            animation: fadeInDown 1.2s ease-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            letter-spacing: 5px;
+            color: var(--retro-red);
+            text-shadow: 2px 2px 0px var(--cream-yellow);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-style: italic;
+            border-top: 1px solid var(--glass-bg);
+            display: inline-block;
+            padding-top: 10px;
+        }
+
+        /* 胶片相册布局 */
+        .film-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            perspective: 1000px;
+        }
+
+        .film-card {
+            background: #fff;
+            padding: 15px 15px 40px 15px;
+            box-shadow: var(--film-shadow);
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        /* 胶片边缘打孔效果 */
+        .film-card::before, .film-card::after {
+            content: "••••••••••••";
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: #000;
+            color: #fff;
+            font-size: 14px;
+            line-height: 10px;
+            letter-spacing: 12px;
+            overflow: hidden;
+        }
+        .film-card::before { top: 0; }
+        .film-card::after { bottom: 0; }
+
+        .film-card:hover {
+            transform: scale(1.03) rotateZ(2deg);
+            z-index: 5;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .photo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(30%) contrast(1.1);
+        }
+
+        .caption {
+            margin-top: 15px;
+            color: #333;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .date-tag {
+            color: var(--retro-red);
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        /* 毛玻璃文案卡片 */
+        .story-section {
+            margin-top: 60px;
+            padding: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        .story-content {
+            font-size: 1.1rem;
+            color: var(--cream-yellow);
+            line-height: 2;
+            white-space: pre-line;
+        }
+
+        /* 动画定义 */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 适配移动端 */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .film-grid { grid-template-columns: 1fr; }
+            .container { padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>{{ main_title }}</h1>
+            <p class="subtitle">{{ subtitle }}</p>
+        </header>
+
+        <div class="film-grid">
+            <div class="film-card">
+                <div class="photo-placeholder">
+                    <img src="https://images.unsplash.com/photo-1516483642775-8208316f2129?auto=format&fit=crop&q=80&w=600" alt="Memory">
+                </div>
+                <div class="caption">
+                    <span class="date-tag">{{ memory_date }}</span>
+                    <p>我们在地图上标注的第一个坐标。</p>
+                </div>
+            </div>
+
+            <div class="film-card" style="transform: rotate(-1.5deg);">
+                <div class="photo-placeholder">
+                    <img src="https://images.unsplash.com/photo-1493134795711-403d9822eb3b?auto=format&fit=crop&q=80&w=600" alt="Memory">
+                </div>
+                <div class="caption">
+                    <span class="date-tag">REC · 02</span>
+                    <p>把阳光和你的笑声一并洗进底片里。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-section">
+            <div class="story-content">
+                {{ story_text }}
+            </div>
+        </div>
+
+        <footer style="margin-top: 50px; font-size: 0.7rem; opacity: 0.4;">
+            &copy; RomanceSpace · Time Capsule Project
+        </footer>
+    </div>
+
+    <script>
+        // 简单的交互：点击胶片模拟快门音效反馈（视觉上）
+        document.querySelectorAll('.film-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.filter = 'brightness(1.5)';
+                setTimeout(() => {
+                    this.style.filter = 'brightness(1)';
+                }, 100);
+                // 这里可以添加快门声 Audio 对象播放逻辑
+            });
+        });
+    </script>
+</body>
+</html>

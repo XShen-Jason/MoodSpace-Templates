@@ -1,0 +1,30 @@
+{
+  "name": "film_memory_wall",
+  "title": "胶片回忆墙",
+  "fields": [
+    {
+      "id": "main_title",
+      "label": "顶部大标题",
+      "default": "我们的胶片日记",
+      "type": "text"
+    },
+    {
+      "id": "subtitle",
+      "label": "副标题文案",
+      "default": "把我们的故事，一卷一卷洗进时光里。",
+      "type": "text"
+    },
+    {
+      "id": "memory_date",
+      "label": "纪念日期",
+      "default": "2024.05.20",
+      "type": "text"
+    },
+    {
+      "id": "story_text",
+      "label": "核心回忆文案",
+      "default": "每一张底片，都是我爱你的证据。那些在地图上走过的足迹，终将汇聚成永恒的清新蓝绿。",
+      "type": "textarea"
+    }
+  ]
+}

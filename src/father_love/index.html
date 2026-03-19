@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ page_title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="description" content="{{ subtitle }}" />
+  <style>
+    :root {
+      --primary: {{ main_color }};
+      --secondary: {{ secondary_color }};
+      --bg-image: url("{{ bg_image_url }}");
+
+      --ink: rgba(255,255,255,0.92);
+      --ink2: rgba(255,255,255,0.74);
+      --ink3: rgba(255,255,255,0.62);
+      --line: rgba(255,255,255,0.22);
+      --line2: rgba(255,255,255,0.34);
+
+      --glass: rgba(255,255,255,0.13);
+      --glass2: rgba(255,255,255,0.05);
+      --shadow: 0 24px 70px rgba(0,0,0,0.68);
+
+      --paper-a: rgba(255,255,255,0.18);
+      --paper-b: rgba(255,255,255,0.08);
+      --paper-edge: rgba(255,255,255,0.32);
+
+      --r-xl: 30px;
+      --r-lg: 22px;
+      --r-md: 16px;
+      --ease: cubic-bezier(0.2, 1, 0.2, 1);
+      --t-fast: 180ms ease-out;
+      --t-slow: 620ms var(--ease);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255, 224, 184, 0.18), transparent 55%),
+        radial-gradient(circle at 88% 85%, rgba(160, 205, 255, 0.16), transparent 52%),
+        linear-gradient(150deg, #070914, #120a1b, #090c1d);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: -4;
+      background-image: var(--bg-image);
+      background-size: cover;
+      background-position: center;
+      opacity: 0.22;
+      filter: saturate(1.1) contrast(1.06);
+    }
+
+    .aurora {
+      position: fixed;
+      inset: -60px;
+      z-index: -3;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(255, 214, 165, 0.72), transparent 60%),
+        radial-gradient(circle at 82% 88%, rgba(134, 182, 255, 0.55), transparent 56%),
+        linear-gradient(150deg, rgba(10, 10, 26, 0.96), rgba(18, 10, 28, 0.98));
+      mix-blend-mode: soft-light;
+      opacity: 0.90;
+      animation: drift 10s var(--ease) infinite alternate;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.055), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(0,0,0,0.18), transparent 55%);
+      mix-blend-mode: overlay;
+      opacity: 0.55;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 14px 12px 90px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 2px;
+    }
+
+    .mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .seal {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: conic-gradient(from 220deg, var(--primary), var(--secondary), rgba(255,255,255,0.85), var(--primary));
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.22), 0 14px 32px rgba(0,0,0,0.62);
+      position: relative;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .seal::after {
+      content: "";
+      position: absolute;
+      inset: -45%;
+      background: radial-gradient(circle at 30% 0%, rgba(255,255,255,0.72), transparent 46%);
+      mix-blend-mode: screen;
+      opacity: 0.82;
+      transform: rotate(12deg);
+    }
+
+    .seal::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      transform: translate(-50%, -50%) rotate(45deg);
+      border-radius: 4px 4px 12px 12px;
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.35);
+    }
+
+    .mark-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .mark-title {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.90);
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mark-subtitle {
+      font-size: 11px;
+      color: rgba(255,255,255,0.68);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.22), transparent 70%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.62);
+      font-size: 11px;
+      color: rgba(255,255,255,0.84);
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .chip i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary), var(--secondary));
+      box-shadow: 0 0 14px rgba(255, 214, 165, 0.75);
+      animation: pulse 2.0s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel {
+      border-radius: var(--r-xl);
+      border: 1px solid rgba(255,255,255,0.26);
+      background: linear-gradient(135deg, var(--glass), var(--glass2));
+      backdrop-filter: blur(26px) saturate(1.35);
+      -webkit-backdrop-filter: blur(26px) saturate(1.35);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -55%;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.18), transparent 58%),
+        radial-gradient(circle at 100% 100%, rgba(255, 214, 165, 0.14), transparent 56%);
+      mix-blend-mode: soft-light;
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* 左：信息与导航（桌面粘性） */
+    .aside {
+      padding: 16px 16px 14px;
+      animation: in var(--t-slow) 40ms both;
+    }
+
+    .aside h2 {
+      font-size: 14px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.92);
+      margin-bottom: 10px;
+    }
+
+    .meta {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--r-md);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.14), transparent 70%);
+    }
+
+    .k {
+      font-size: 11px;
+      color: rgba(255,255,255,0.66);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .v {
+      font-size: 12px;
+      color: rgba(255,255,255,0.92);
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .nav {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.90);
+      border: 1px solid rgba(255,255,255,0.30);
+      background: rgba(255,255,255,0.05);
+      border-radius: 999px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform var(--t-fast), border-color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
+    }
+
+    .nav a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.48);
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 18px 44px rgba(0,0,0,0.72);
+    }
+
+    .nav small {
+      color: rgba(255,255,255,0.64);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    /* 中：信纸主体 */
+    .letter {
+      padding: 16px;
+      animation: in var(--t-slow) 90ms both;
+    }
+
+    .envelope {
+      border-radius: var(--r-xl);
+      border: 1px solid rgba(255,255,255,0.26);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+    }
+
+    .envelope::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+        radial-gradient(circle at 0 0, rgba(255, 214, 165, 0.18), transparent 58%),
+        radial-gradient(circle at 100% 100%, rgba(134, 182, 255, 0.12), transparent 55%);
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .envelope-top {
+      padding: 18px 18px 12px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03));
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.20), transparent 70%);
+      font-size: 11px;
+      color: rgba(255,255,255,0.84);
+      white-space: nowrap;
+    }
+
+    .kicker b {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary), var(--secondary));
+      box-shadow: 0 0 12px rgba(255, 214, 165, 0.72);
+      display: inline-block;
+      animation: pulse 2.0s ease-in-out infinite;
+    }
+
+    .date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.78);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .paper {
+      position: relative;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.14), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+
+    .paper-inner {
+      padding: 18px 18px 20px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      position: relative;
+    }
+
+    .paper-inner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.00),
+          rgba(255,255,255,0.00) 22px,
+          rgba(255,255,255,0.045) 23px
+        );
+      opacity: 0.8;
+      pointer-events: none;
+      mask-image: radial-gradient(circle at 20% 0%, rgba(0,0,0,1) 0, rgba(0,0,0,0.95) 45%, rgba(0,0,0,0.2) 85%, rgba(0,0,0,0) 100%);
+    }
+
+    .title {
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+      text-shadow: 0 12px 34px rgba(0,0,0,0.72);
+      margin-bottom: 10px;
+    }
+
+    .accent {
+      background: linear-gradient(120deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: none;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--ink2);
+      margin-bottom: 14px;
+      white-space: pre-line;
+    }
+
+    .address {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.52);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      font-size: 12px;
+      color: rgba(255,255,255,0.90);
+      white-space: nowrap;
+    }
+
+    .body {
+      font-size: 13px;
+      line-height: 1.95;
+      color: rgba(255,255,255,0.92);
+      white-space: pre-line;
+      position: relative;
+    }
+
+    .signature {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.76);
+      font-size: 12px;
+    }
+
+    .signature strong { color: rgba(255,255,255,0.92); font-weight: 700; }
+
+    /* 右：时间轴（记忆） */
+    .timeline {
+      padding: 16px 16px 14px;
+      animation: in var(--t-slow) 140ms both;
+    }
+
+    .timeline h3 {
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.92);
+      margin-bottom: 10px;
+    }
+
+    .tl-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.66);
+      margin-bottom: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tl {
+      display: grid;
+      gap: 10px;
+      position: relative;
+      padding-left: 12px;
+    }
+
+    .tl::before {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 4px;
+      bottom: 6px;
+      width: 2px;
+      border-radius: 999px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.34), rgba(255,255,255,0.10));
+      opacity: 0.9;
+    }
+
+    .tl-item {
+      position: relative;
+      padding: 12px 12px;
+      border-radius: var(--r-lg);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.13), transparent 70%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 16px 36px rgba(0,0,0,0.58);
+      transform: translateY(0);
+      transition: transform var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+    }
+
+    .tl-item::before {
+      content: "";
+      position: absolute;
+      left: -12px;
+      top: 16px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary), var(--secondary));
+      box-shadow: 0 0 14px rgba(255, 214, 165, 0.7);
+    }
+
+    .tl-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.34);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.16), transparent 70%);
+    }
+
+    .tl-item b {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.70);
+      margin-bottom: 4px;
+    }
+
+    .tl-item p {
+      font-size: 13px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.92);
+      white-space: pre-line;
+    }
+
+    /* 图库（底部） */
+    .gallery {
+      padding: 16px;
+      animation: in var(--t-slow) 180ms both;
+    }
+
+    .gallery-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .gallery h3 {
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .gallery p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.66);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .strip {
+      margin-top: 10px;
+      border-radius: var(--r-xl);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.12), transparent 70%);
+      overflow: hidden;
+      position: relative;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .track {
+      display: flex;
+      gap: 10px;
+      padding: 12px 12px 14px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    .shot {
+      flex: 0 0 auto;
+      width: 120px;
+      height: 86px;
+      border-radius: 18px;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 18px 44px rgba(0,0,0,0.72);
+      position: relative;
+      overflow: hidden;
+      transform-origin: center;
+      transition: transform var(--t-fast), box-shadow var(--t-fast), opacity var(--t-fast);
+    }
+
+    .shot::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(0,0,0,0.18), rgba(255,255,255,0.07));
+      mix-blend-mode: soft-light;
+    }
+
+    .shot:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.86);
+    }
+
+    .strip .hint {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(10, 10, 20, 0.72);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.86);
+      font-size: 10px;
+      pointer-events: none;
+    }
+
+    /* 底部信息 */
+    footer {
+      padding: 8px 2px 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.68);
+    }
+
+    .footer_right {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .footer_right span {
+      background: linear-gradient(120deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* 动效：滚动入场 */
+    .reveal { opacity: 0; transform: translateY(16px); filter: blur(6px); }
+    .reveal.is_in { opacity: 1; transform: translateY(0); filter: blur(0); transition: opacity 700ms var(--ease), transform 700ms var(--ease), filter 700ms var(--ease); }
+
+    @keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.35); opacity: 1; } }
+    @keyframes drift { 0% { transform: translate3d(-6px, -6px, 0) scale(1.02); } 100% { transform: translate3d(8px, 10px, 0) scale(1.02); } }
+    @keyframes in { 0% { opacity: 0; transform: translateY(22px) scale(0.985); filter: blur(6px);} 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0);} }
+
+    /* 响应式：桌面三栏 */
+    @media (min-width: 900px) {
+      .page { padding: 22px 26px 34px; max-width: 1160px; margin: 0 auto; gap: 16px; }
+      .layout { grid-template-columns: 340px minmax(0, 1fr) 360px; gap: 16px; }
+      .aside { position: sticky; top: 16px; }
+      .timeline { position: sticky; top: 16px; }
+      .letter { padding: 0; }
+    }
+
+    /* 手机底部粘性导航（避免像“永痕浪漫”那样的按钮排布） */
+    .dock {
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      z-index: 40;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+      box-shadow: 0 22px 60px rgba(0,0,0,0.72);
+      backdrop-filter: blur(20px) saturate(1.35);
+      -webkit-backdrop-filter: blur(20px) saturate(1.35);
+      padding: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .dock a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.14);
+      padding: 10px 10px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform var(--t-fast), background var(--t-fast), border-color var(--t-fast);
+      white-space: nowrap;
+    }
+
+    .dock a:hover { transform: translateY(-1px); background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.30); }
+
+    @media (min-width: 900px) { .dock { display: none; } }
+    @media (max-width: 360px) {
+      .chip { display: none; }
+      .title { font-size: 24px; }
+      .dock a { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="aurora"></div>
+  <div class="grain"></div>
+
+  <div class="page">
+    <header class="topbar">
+      <div class="mark">
+        <div class="seal" aria-hidden="true"></div>
+        <div class="mark-text">
+          <div class="mark-title">romance space</div>
+          <div class="mark-subtitle" data_text="header_tagline">{{ header_tagline }}</div>
+        </div>
+      </div>
+      <div class="chip"><i aria-hidden="true"></i><span data_text="header_badge">{{ header_badge }}</span></div>
+    </header>
+
+    <section class="layout">
+      <aside class="panel aside reveal" id="about">
+        <h2>for father</h2>
+        <div class="meta">
+          <div class="meta-row">
+            <div class="k">to</div>
+            <div class="v" data_text="father_name">{{ father_name }}</div>
+          </div>
+          <div class="meta-row">
+            <div class="k">from</div>
+            <div class="v" data_text="child_name">{{ child_name }}</div>
+          </div>
+          <div class="meta-row">
+            <div class="k">date</div>
+            <div class="v" data_text="date">{{ date }}</div>
+          </div>
+          <div class="meta-row">
+            <div class="k">place</div>
+            <div class="v" data_text="location">{{ location }}</div>
+          </div>
+        </div>
+
+        <div class="nav" aria-label="页面导航">
+          <a href="#letter" class="nav_link">
+            <span><strong style="font-weight:700;" data_text="primary_button_text">{{ primary_button_text }}</strong></span>
+            <small>letter</small>
+          </a>
+          <a href="#moments" class="nav_link">
+            <span><strong style="font-weight:700;" data_text="moments_subtitle">{{ moments_subtitle }}</strong></span>
+            <small>moments</small>
+          </a>
+          <a href="#gallery" class="nav_link">
+            <span><strong style="font-weight:700;" data_text="secondary_button_text">{{ secondary_button_text }}</strong></span>
+            <small>gallery</small>
+          </a>
+        </div>
+      </aside>
+
+      <main class="panel letter reveal" id="letter">
+        <div class="envelope">
+          <div class="envelope-top">
+            <div class="kicker"><b aria-hidden="true"></b><span data_text="hero_kicker">{{ hero_kicker }}</span></div>
+            <div class="date" data_text="date">{{ date }}</div>
+          </div>
+
+          <div class="paper">
+            <div class="paper-inner">
+              <div class="title">
+                <span data_text="title">{{ title }}</span><br />
+                <span class="accent" data_text="father_name">{{ father_name }}</span>
+                <span style="opacity:0.65;"> · </span>
+                <span class="accent" data_text="child_name">{{ child_name }}</span>
+              </div>
+
+              <div class="subtitle" data_text="subtitle">{{ subtitle }}</div>
+
+              <div class="address">
+                <div class="tag">致：<span data_text="father_name">{{ father_name }}</span></div>
+                <div class="tag">来自：<span data_text="child_name">{{ child_name }}</span></div>
+                <div class="tag"><span data_text="location">{{ location }}</span></div>
+              </div>
+
+              <div class="body" data_text="letter_body">{{ letter_body }}</div>
+
+              <div class="signature">
+                <div data_text="footer_whisper">{{ footer_whisper }}</div>
+                <div><strong data_text="child_name">{{ child_name }}</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <section class="panel timeline reveal" id="moments">
+        <h3>moments</h3>
+        <div class="tl-sub" data_text="moments_subtitle">{{ moments_subtitle }}</div>
+        <div class="tl">
+          <div class="tl-item">
+            <b>memory 01</b>
+            <p data_text="moment_1">{{ moment_1 }}</p>
+          </div>
+          <div class="tl-item">
+            <b>memory 02</b>
+            <p data_text="moment_2">{{ moment_2 }}</p>
+          </div>
+          <div class="tl-item">
+            <b>memory 03</b>
+            <p data_text="moment_3">{{ moment_3 }}</p>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel gallery reveal" id="gallery">
+      <div class="gallery-head">
+        <h3>gallery</h3>
+        <p data_text="gallery_subtitle">{{ gallery_subtitle }}</p>
+      </div>
+      <div style="font-size:12px; color: rgba(255,255,255,0.66);" data_text="gallery_hint">{{ gallery_hint }}</div>
+
+      <div class="strip">
+        <div class="track" id="track"></div>
+        <div class="hint" data_text="gallery_chip">{{ gallery_chip }}</div>
+      </div>
+      <span data_text="gallery_images" style="display:none;">{{ gallery_images }}</span>
+    </section>
+
+    <footer>
+      <div data_text="footer_left">{{ footer_left }}</div>
+      <div class="footer_right"><span data_text="footer_right">{{ footer_right }}</span></div>
+    </footer>
+  </div>
+
+  <nav class="dock" aria-label="快速导航">
+    <a href="#letter">✦ 信</a>
+    <a href="#moments">⌁ 记忆</a>
+    <a href="#gallery">⟡ 相册</a>
+  </nav>
+
+  <audio id="bgm" src="{{ music_url }}" loop preload="auto"></audio>
+
+  <script>
+    (function () {
+      function smoothAnchor(e) {
+        const a = e.target.closest("a[href^='#']");
+        if (!a) return;
+        const id = a.getAttribute("href");
+        if (!id || id.length < 2) return;
+        const el = document.querySelector(id);
+        if (!el) return;
+        e.preventDefault();
+        const top = el.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top: top, behavior: "smooth" });
+        history.pushState(null, "", id);
+      }
+
+      document.addEventListener("click", function (e) {
+        smoothAnchor(e);
+      }, { passive: false });
+
+      (function revealOnScroll() {
+        const nodes = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+        if (!nodes.length) return;
+        if (!("IntersectionObserver" in window)) {
+          nodes.forEach(function (n) { n.classList.add("is_in"); });
+          return;
+        }
+        const io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) {
+              en.target.classList.add("is_in");
+              io.unobserve(en.target);
+            }
+          });
+        }, { root: null, threshold: 0.12 });
+        nodes.forEach(function (n) { io.observe(n); });
+      })();
+
+      function isUninjected(s) {
+        return typeof s === "string" && /{{\s*[a-z_]+\s*}}/.test(s);
+      }
+
+      function setTextById(id, value) {
+        const nodes = document.querySelectorAll('[data_text="' + id + '"]');
+        if (!nodes || !nodes.length) return;
+        nodes.forEach(function (n) {
+          n.textContent = value;
+        });
+      }
+
+      function setCssVar(name, value) {
+        document.documentElement.style.setProperty(name, value);
+      }
+
+      // 默认值回填：当平台未注入时，替换页面中的 {{ ... }} 为默认内容（方便直接打开预览）
+      (function applyDefaultsIfNeeded() {
+        const defaults = {
+          page_title: "父爱书信 · 浪漫空间",
+          title: "写给父亲的一封信",
+          subtitle: "有些爱不善言辞，却把一生都站成你的靠山。\\n今天，把那句“谢谢你”郑重写给你。",
+          father_name: "爸爸",
+          child_name: "我",
+          date: "2026 · 06 · 21",
+          location: "家",
+          header_tagline: "把感谢写成光，把守护写成一生。",
+          header_badge: "温柔守护 · 父爱如山",
+          hero_kicker: "Father’s Love Letter",
+          primary_button_text: "读一读这封信",
+          secondary_button_text: "翻看光影纪念",
+          footer_whisper: "你不说爱，但每一步都在替我挡风。",
+          letter_body:
+            "亲爱的爸爸：\\n\\n谢谢你把沉默变成肩膀，把辛苦变成日常的安稳。\\n小时候你牵着我走，长大后你仍把我放在心上。\\n\\n我想对你说：\\n你的付出我都记得，你的温柔我都懂得。\\n愿你被岁月善待，愿你永远健康、平安、快乐。\\n\\n—— 我",
+          moments_subtitle: "三件小事，足以照亮很多年。",
+          moment_1: "那次下雨，你把伞倾向我，自己半边肩膀都湿了。",
+          moment_2: "你不太会表达，却总在我需要时第一个出现。",
+          moment_3: "你教我认真、勇敢、善良——像你一样。",
+          gallery_subtitle: "把回忆装进每一帧的光里。",
+          gallery_hint: "填写图片链接后，这里会自动生成一排可滑动的相片卡片。",
+          gallery_chip: "左右滑动",
+          gallery_images:
+            "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg\\nhttps://images.pexels.com/photos/1445696/pexels-photo-1445696.jpeg\\nhttps://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
+          bg_image_url: "https://images.pexels.com/photos/2911545/pexels-photo-2911545.jpeg",
+          main_color: "#ffd6a5",
+          secondary_color: "#86b6ff",
+          music_url: "",
+          footer_left: "写给 爸爸 · 由 我 亲笔",
+          footer_right: "浪漫空间 · RomanceSpace"
+        };
+
+        // 判定是否需要回填：只要页面还有 {{ title }} 这类占位符，就认为未注入
+        const sample = document.title;
+        const need = isUninjected(sample) || isUninjected(document.body.textContent);
+        if (!need) return;
+
+        // title / meta description
+        document.title = defaults.page_title;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute("content", defaults.subtitle);
+
+        // 文本字段
+        Object.keys(defaults).forEach(function (k) {
+          if (k === "bg_image_url" || k === "main_color" || k === "secondary_color") return;
+          setTextById(k, defaults[k]);
+        });
+
+        // css vars / bg image
+        setCssVar("--primary", defaults.main_color);
+        setCssVar("--secondary", defaults.secondary_color);
+        setCssVar("--bg-image", 'url("' + defaults.bg_image_url + '")');
+
+        // 书信签名联动
+        setTextById("father_name", defaults.father_name);
+        setTextById("child_name", defaults.child_name);
+      })();
+
+      (function initGallery() {
+        const track = document.getElementById("track");
+        if (!track) return;
+        var raw = "{{ gallery_images }}";
+        if (!raw || raw === "{{ gallery_images }}") {
+          // 如果平台未注入，defaults 脚本已把 data_text 替换为默认文字，但这里仍拿不到 raw；
+          // 因此再从页面中提取 gallery_images 文本（已回填后会变成真实内容）
+          const probe = document.querySelector('[data_text="gallery_images"]');
+          raw = probe ? probe.textContent : "";
+        }
+
+        // 如果仍然是占位符，就不渲染
+        if (!raw || isUninjected(raw)) return;
+        var parts = raw.split(/\\r?\\n|,/).map(function (s) { return s.trim(); }).filter(Boolean);
+        if (!parts.length) return;
+
+        // 清空再渲染（避免重复）
+        track.innerHTML = "";
+        parts.forEach(function (url) {
+          var item = document.createElement("div");
+          item.className = "shot";
+          item.style.backgroundImage = "url('" + url.replace(/'/g, "\\\\'") + "')";
+          track.appendChild(item);
+        });
+      })();
+    })();
+  </script>
+</body>
+</html>

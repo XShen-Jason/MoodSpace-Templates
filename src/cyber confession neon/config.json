@@ -1,0 +1,30 @@
+{
+  "name": "cyber_love_neon",
+  "title": "赛博告白霓虹",
+  "fields": [
+    {
+      "id": "cyber_title",
+      "label": "全屏霓虹标题",
+      "default": "CYBER LOVE",
+      "type": "text"
+    },
+    {
+      "id": "confession_code",
+      "label": "动态告白文案",
+      "default": "在二进制的世界里，我只对你解码。\n你是我系统里，唯一的优先级异常。",
+      "type": "textarea"
+    },
+    {
+      "id": "encryption_key",
+      "label": "底部加密信息",
+      "default": "HEARTBEAT_ALGORITHM: ENCRYPTED",
+      "type": "text"
+    },
+    {
+      "id": "signal_btn_text",
+      "label": "按钮文ara",
+      "default": "发送信号",
+      "type": "text"
+    }
+  ]
+}

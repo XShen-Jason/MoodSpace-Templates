@@ -1,0 +1,37 @@
+{
+  "name": "starry_confession",
+  "title": "星空告白",
+  "fields": [
+    { "id": "page_title", "label": "页面标题（浏览器标题）", "default": "星空告白 · 浪漫空间", "type": "text" },
+    { "id": "headline", "label": "主标题", "default": "星空告白", "type": "text" },
+    { "id": "subline", "label": "副标题", "default": "把心事交给星光，把答案留给你。", "type": "text" },
+
+    { "id": "to_name", "label": "告白对象（To）", "default": "你", "type": "text" },
+    { "id": "from_name", "label": "署名（From）", "default": "我", "type": "text" },
+    { "id": "date", "label": "日期", "default": "2026 · 05 · 20", "type": "text" },
+    { "id": "location", "label": "地点", "default": "在同一片星空下", "type": "text" },
+
+    { "id": "quote_1", "label": "文案 1", "default": "你抬头看星星的时候，我在想你。", "type": "text" },
+    { "id": "quote_2", "label": "文案 2", "default": "在漫长宇宙里，我只偏爱你这一束光。", "type": "text" },
+    { "id": "quote_3", "label": "文案 3", "default": "如果答案是你，那我愿意奔赴一万次。", "type": "text" },
+
+    { "id": "confession_title", "label": "告白区标题", "default": "写给 {{ to_name }} 的告白", "type": "text" },
+    { "id": "confession_body", "label": "告白正文（可换行）", "default": "我想把所有温柔都讲给你听。\\n不止今夜，不止星光。\\n\\n我喜欢你，认真且坚定。", "type": "textarea" },
+
+    { "id": "promise_title", "label": "约定区标题", "default": "我们的约定", "type": "text" },
+    { "id": "promise_1", "label": "约定 1", "default": "把日常过成仪式，把拥抱当作答案。", "type": "textarea" },
+    { "id": "promise_2", "label": "约定 2", "default": "每次争吵都记得靠近，每次快乐都记得分享。", "type": "textarea" },
+    { "id": "promise_3", "label": "约定 3", "default": "走到哪里都牵手，走到最后也不放手。", "type": "textarea" },
+
+    { "id": "cta_primary", "label": "主按钮文案", "default": "把答案给我", "type": "text" },
+    { "id": "cta_secondary", "label": "次按钮文案", "default": "继续向下看", "type": "text" },
+
+    { "id": "main_color", "label": "主色（星光紫 HEX）", "default": "#a78bfa", "type": "text" },
+    { "id": "secondary_color", "label": "辅色（霓虹蓝 HEX）", "default": "#60a5fa", "type": "text" },
+    { "id": "accent_color", "label": "强调色（薄荷绿 HEX）", "default": "#67e8c6", "type": "text" },
+
+    { "id": "bg_star_density", "label": "星点密度（数字，建议 0.6~1.4）", "default": "1.0", "type": "text" },
+    { "id": "footer_left", "label": "页脚左侧", "default": "写给 {{ to_name }} · 来自 {{ from_name }}", "type": "text" },
+    { "id": "footer_right", "label": "页脚右侧", "default": "浪漫空间 · RomanceSpace", "type": "text" }
+  ]
+}
