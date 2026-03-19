@@ -1,0 +1,37 @@
+{
+  "name": "city_trace_map",
+  "title": "城市轨迹地图",
+  "fields": [
+    { "id": "page_title", "label": "页面标题（浏览器标题）", "default": "城市轨迹地图 · 浪漫空间", "type": "text" },
+    { "id": "headline", "label": "主标题", "default": "城市轨迹地图", "type": "text" },
+    { "id": "subline", "label": "副标题", "default": "地图叙事 · 旅行感 · 清新蓝绿", "type": "text" },
+
+    { "id": "quote_1", "label": "文案 1", "default": "我们的爱情，是一张越走越远的地图。", "type": "text" },
+    { "id": "quote_2", "label": "文案 2", "default": "从你的城市，到我的城市，最后是我们的城市。", "type": "text" },
+    { "id": "quote_3", "label": "文案 3", "default": "每一步，都走向你。", "type": "text" },
+
+    { "id": "couple_names", "label": "称呼（如：你 & 我）", "default": "你 & 我", "type": "text" },
+    { "id": "date_range", "label": "时间范围（如：2021-2026）", "default": "2021 — 2026", "type": "text" },
+
+    { "id": "map_title", "label": "地图区域标题", "default": "我们的地图", "type": "text" },
+    { "id": "timeline_title", "label": "侧边栏标题", "default": "我们的足迹", "type": "text" },
+    { "id": "timeline_hint", "label": "侧边栏提示", "default": "点击时间线或地图标记，展开回忆卡片。", "type": "text" },
+
+    { "id": "map_bg_image_url", "label": "地图底图（简约地图风）URL", "default": "https://images.pexels.com/photos/7130538/pexels-photo-7130538.jpeg", "type": "text" },
+    { "id": "bg_image_url", "label": "页面背景图（可为空）URL", "default": "", "type": "text" },
+
+    { "id": "main_color", "label": "主色（薄荷绿 HEX）", "default": "#67e8c6", "type": "text" },
+    { "id": "secondary_color", "label": "主色（天空蓝 HEX）", "default": "#60a5fa", "type": "text" },
+    { "id": "neutral_color", "label": "辅助色（米白/浅灰 HEX）", "default": "#f3f4f6", "type": "text" },
+
+    {
+      "id": "locations_json",
+      "label": "地点列表 JSON（数组，每项含 id/name/date/text/x/y，可选 cover）",
+      "default": "[\n  {\"id\":\"city_01\",\"name\":\"青岛\",\"date\":\"2021.06\",\"text\":\"海风把笑声吹得很远，那天你说：以后每年都来。\",\"x\":22,\"y\":38,\"cover\":\"\"},\n  {\"id\":\"city_02\",\"name\":\"杭州\",\"date\":\"2022.10\",\"text\":\"桂花香落在衣袖，你把热奶茶塞到我手心。\",\"x\":56,\"y\":44,\"cover\":\"\"},\n  {\"id\":\"city_03\",\"name\":\"成都\",\"date\":\"2024.03\",\"text\":\"夜色温柔，街灯像星星，我们把脚步放慢。\",\"x\":42,\"y\":62,\"cover\":\"\"}\n]",
+      "type": "textarea"
+    },
+
+    { "id": "footer_left", "label": "页脚左侧", "default": "为 {{ couple_names }} 记录的旅途", "type": "text" },
+    { "id": "footer_right", "label": "页脚右侧", "default": "浪漫空间 · RomanceSpace", "type": "text" }
+  ]
+}

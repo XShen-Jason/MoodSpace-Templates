@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>城市轨迹地图 · 浪漫空间</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="description" content="我们的爱情，是一张越走越远的地图。" />
+  <style>
+    :root{
+      --mint: #67e8c6;
+      --sky: #60a5fa;
+      --neutral: #f3f4f6;
+
+      --bg-image: none;
+      --map-image: url("https://images.pexels.com/photos/7130538/pexels-photo-7130538.jpeg");
+
+      --glass: rgba(255,255,255,0.16);
+      --glass2: rgba(255,255,255,0.07);
+      --line: rgba(255,255,255,0.26);
+      --line2: rgba(255,255,255,0.36);
+      --ink: rgba(255,255,255,0.94);
+      --ink2: rgba(255,255,255,0.76);
+      --ink3: rgba(255,255,255,0.62);
+      --shadow: 0 22px 66px rgba(0,0,0,0.66);
+      --r-xl: 28px;
+      --r-lg: 20px;
+      --r-md: 14px;
+      --ease: cubic-bezier(0.2, 1, 0.2, 1);
+      --t-fast: 180ms ease-out;
+      --t-slow: 640ms var(--ease);
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html,body{ height:100%; }
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(103,232,198,0.18), transparent 56%),
+        radial-gradient(circle at 86% 86%, rgba(96,165,250,0.16), transparent 54%),
+        linear-gradient(150deg, #061018, #071623, #0b0f1d);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .bg{
+      position: fixed;
+      inset: 0;
+      z-index: -4;
+      background-image: var(--bg-image);
+      background-size: cover;
+      background-position: center;
+      opacity: 0.18;
+      filter: saturate(1.08) contrast(1.06);
+    }
+
+    .aurora{
+      position: fixed;
+      inset: -60px;
+      z-index: -3;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(103,232,198,0.62), transparent 60%),
+        radial-gradient(circle at 78% 90%, rgba(96,165,250,0.52), transparent 58%),
+        linear-gradient(150deg, rgba(7, 16, 26, 0.98), rgba(10, 10, 22, 0.98));
+      mix-blend-mode: soft-light;
+      opacity: 0.92;
+      animation: drift 11s var(--ease) infinite alternate;
+    }
+
+    .grain{
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.06), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(0,0,0,0.18), transparent 55%);
+      mix-blend-mode: overlay;
+      opacity: 0.55;
+    }
+
+    .page{
+      min-height: 100vh;
+      padding: 14px 12px 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 6px 2px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .logo{
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: conic-gradient(from 220deg, var(--mint), var(--sky), rgba(255,255,255,0.86), var(--mint));
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.18), 0 16px 34px rgba(0,0,0,0.62);
+      position: relative;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .logo::after{
+      content:"";
+      position:absolute;
+      inset:-45%;
+      background: radial-gradient(circle at 30% 0%, rgba(255,255,255,0.72), transparent 46%);
+      mix-blend-mode: screen;
+      opacity: 0.82;
+      transform: rotate(10deg);
+    }
+
+    .brand-text{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand-title{
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+      font-weight: 750;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .brand-sub{
+      font-size: 11px;
+      color: rgba(255,255,255,0.66);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .hero{
+      display: grid;
+      gap: 10px;
+    }
+
+    .hero h1{
+      font-size: 26px;
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+      text-shadow: 0 14px 40px rgba(0,0,0,0.72);
+    }
+
+    .accent{
+      background: linear-gradient(120deg, var(--mint), var(--sky));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .meta-row{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: rgba(255,255,255,0.74);
+      font-size: 12px;
+    }
+
+    .pill{
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.24);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.16), transparent 72%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.55);
+      color: rgba(255,255,255,0.88);
+      white-space: nowrap;
+    }
+
+    .quotes{
+      border-radius: var(--r-xl);
+      border: 1px solid rgba(255,255,255,0.24);
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+      backdrop-filter: blur(22px) saturate(1.3);
+      -webkit-backdrop-filter: blur(22px) saturate(1.3);
+      box-shadow: var(--shadow);
+      padding: 14px 14px;
+      position: relative;
+      overflow:hidden;
+    }
+
+    .quotes::before{
+      content:"";
+      position:absolute;
+      inset:-55%;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.16), transparent 58%),
+        radial-gradient(circle at 100% 100%, rgba(103,232,198,0.12), transparent 58%);
+      mix-blend-mode: soft-light;
+      opacity: 0.9;
+      pointer-events:none;
+    }
+
+    .q{
+      position: relative;
+      padding-left: 14px;
+      border-left: 2px solid rgba(255,255,255,0.22);
+      display: grid;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.9);
+      white-space: pre-line;
+    }
+    .q em{ font-style: normal; color: rgba(255,255,255,0.82); }
+
+    .layout{
+      display:grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel{
+      border-radius: var(--r-xl);
+      border: 1px solid rgba(255,255,255,0.24);
+      background: linear-gradient(135deg, var(--glass), var(--glass2));
+      backdrop-filter: blur(26px) saturate(1.35);
+      -webkit-backdrop-filter: blur(26px) saturate(1.35);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:-60%;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.16), transparent 58%),
+        radial-gradient(circle at 100% 100%, rgba(96,165,250,0.10), transparent 58%);
+      mix-blend-mode: soft-light;
+      opacity: 0.92;
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    /* 地图区 */
+    .map-panel{
+      padding: 12px;
+    }
+
+    .map-head{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 8px 10px;
+    }
+    .map-head h2{
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.92);
+    }
+    .map-head p{
+      font-size: 11px;
+      color: rgba(255,255,255,0.62);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .map-shell{
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.20);
+      background: rgba(0,0,0,0.18);
+      overflow: hidden;
+      position: relative;
+      height: 360px;
+      box-shadow: 0 18px 48px rgba(0,0,0,0.66);
+      touch-action: none;
+    }
+
+    .map-canvas{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center;
+      width: min(920px, 1200px);
+      height: 560px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.14), transparent 58%),
+        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02)),
+        var(--map-image);
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 22px 70px rgba(0,0,0,0.55);
+      overflow:hidden;
+    }
+
+    .map-canvas::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 0 0, rgba(103,232,198,0.18), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(96,165,250,0.14), transparent 60%),
+        linear-gradient(145deg, rgba(0,0,0,0.18), rgba(255,255,255,0.04));
+      mix-blend-mode: soft-light;
+      pointer-events:none;
+    }
+
+    .marker{
+      position:absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.78);
+      background: radial-gradient(circle, rgba(255,255,255,0.92) 0, rgba(255,255,255,0.28) 55%, rgba(255,255,255,0.08) 100%);
+      box-shadow:
+        0 0 0 6px rgba(103,232,198,0.10),
+        0 0 18px rgba(103,232,198,0.55),
+        0 18px 40px rgba(0,0,0,0.42);
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: transform var(--t-fast), box-shadow var(--t-fast), border-color var(--t-fast);
+    }
+
+    .marker::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width: 7px;
+      height: 7px;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      background: radial-gradient(circle, var(--mint), var(--sky));
+      box-shadow: 0 0 14px rgba(96,165,250,0.6);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    .marker:hover{
+      transform: translate(-50%, -50%) scale(1.08);
+      border-color: rgba(255,255,255,0.96);
+      box-shadow:
+        0 0 0 8px rgba(96,165,250,0.10),
+        0 0 22px rgba(96,165,250,0.6),
+        0 22px 54px rgba(0,0,0,0.52);
+    }
+
+    .map-tools{
+      position:absolute;
+      left: 10px;
+      bottom: 10px;
+      display:flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .tool{
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.62);
+      padding: 9px 12px;
+      color: rgba(255,255,255,0.9);
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform var(--t-fast), background var(--t-fast), border-color var(--t-fast);
+    }
+    .tool:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,0.40); background: rgba(255,255,255,0.10); }
+
+    .zoom-ind{
+      position:absolute;
+      right: 10px;
+      bottom: 10px;
+      z-index: 10;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(10, 12, 18, 0.55);
+      color: rgba(255,255,255,0.84);
+      font-size: 10px;
+      pointer-events: none;
+    }
+
+    /* 侧边时间线 */
+    .timeline{
+      padding: 12px;
+    }
+
+    .timeline-head{
+      padding: 8px 8px 10px;
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .timeline-head h2{
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.92);
+    }
+    .timeline-head p{
+      font-size: 11px;
+      color: rgba(255,255,255,0.62);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tl{
+      margin-top: 6px;
+      display: grid;
+      gap: 10px;
+      max-height: 360px;
+      overflow: auto;
+      padding: 4px 6px 8px;
+      scrollbar-width: thin;
+    }
+
+    .tl-item{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.20);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.12), transparent 70%);
+      box-shadow: 0 16px 42px rgba(0,0,0,0.6);
+      padding: 12px 12px;
+      cursor: pointer;
+      transition: transform var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+    }
+    .tl-item:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.32);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.16), transparent 70%);
+    }
+    .tl-top{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .tl-top strong{
+      font-size: 13px;
+      color: rgba(255,255,255,0.92);
+    }
+    .tl-top span{
+      font-size: 11px;
+      color: rgba(255,255,255,0.62);
+      white-space: nowrap;
+    }
+    .tl-item .tl-text{
+      font-size: 12px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.80);
+      white-space: pre-line;
+    }
+
+    /* 回忆卡片弹窗 */
+    .modal{
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display:none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .modal.is_open{ display:flex; }
+
+    .card{
+      width: min(520px, 100%);
+      border-radius: var(--r-xl);
+      border: 1px solid rgba(255,255,255,0.26);
+      background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06));
+      box-shadow: 0 28px 88px rgba(0,0,0,0.72);
+      backdrop-filter: blur(26px) saturate(1.35);
+      -webkit-backdrop-filter: blur(26px) saturate(1.35);
+      overflow:hidden;
+      position: relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-55%;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.18), transparent 58%),
+        radial-gradient(circle at 100% 100%, rgba(103,232,198,0.12), transparent 58%);
+      mix-blend-mode: soft-light;
+      opacity: 0.9;
+      pointer-events:none;
+    }
+    .card-head{
+      padding: 14px 14px 10px;
+      display:flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.14);
+    }
+    .card-head h3{
+      font-size: 16px;
+      letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.94);
+    }
+    .card-head p{
+      font-size: 12px;
+      color: rgba(255,255,255,0.66);
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .close{
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(0,0,0,0.18);
+      color: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: transform var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+      white-space: nowrap;
+    }
+    .close:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,0.34); background: rgba(255,255,255,0.06); }
+    .card-body{
+      padding: 12px 14px 14px;
+      font-size: 13px;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.90);
+      white-space: pre-line;
+      position: relative;
+    }
+
+    footer{
+      padding: 8px 2px 2px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.66);
+    }
+    .footer_right{
+      text-align:right;
+      white-space: nowrap;
+    }
+    .footer_right span{
+      background: linear-gradient(120deg, var(--mint), var(--sky));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* 入场动画（当前简化为默认可见，避免浏览器不兼容导致内容不可见） */
+    .reveal{ opacity: 1; transform: translateY(0); filter: blur(0); }
+    .reveal.is_in{ opacity: 1; transform: translateY(0); filter: blur(0); }
+
+    @keyframes pulse { 0%,100%{ transform: scale(1); opacity: 0.9; } 50%{ transform: scale(1.35); opacity: 1; } }
+    @keyframes drift { 0%{ transform: translate3d(-7px,-6px,0) scale(1.02); } 100%{ transform: translate3d(10px,12px,0) scale(1.02);} }
+
+    /* 响应式：桌面左右分栏 */
+    @media (min-width: 900px){
+      .page{ padding: 22px 26px 22px; max-width: 1180px; margin: 0 auto; gap: 16px; }
+      .layout{ grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 16px; }
+      .map-shell{ height: 520px; }
+      .tl{ max-height: 520px; }
+      .hero h1{ font-size: 36px; }
+    }
+
+    @media (max-width: 360px){
+      .hero h1{ font-size: 22px; }
+      .map-shell{ height: 320px; }
+      .pill{ font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="aurora"></div>
+  <div class="grain"></div>
+
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-text">
+          <div class="brand-title">romance space</div>
+          <div class="brand-sub">地图叙事 · 旅行感 · 清新蓝绿</div>
+        </div>
+      </div>
+      <div class="pill">2021 — 2026</div>
+    </header>
+
+    <section class="hero reveal">
+      <h1>
+        <span class="accent">城市轨迹地图</span>
+        <span style="opacity:0.62;"> · </span>
+        <span>你 &amp; 我</span>
+      </h1>
+      <div class="meta-row">
+        <span class="pill">我们的爱情，是一张越走越远的地图。</span>
+        <span class="pill">从你的城市，到我的城市，最后是我们的城市。</span>
+        <span class="pill">每一步，都走向你。</span>
+      </div>
+    </section>
+
+    <section class="layout">
+      <section class="panel map-panel reveal">
+        <div class="map-head">
+          <h2>我们的地图</h2>
+          <p>拖拽 / 缩放 / 点击标记</p>
+        </div>
+
+        <div class="map-shell" id="map_shell" aria-label="互动地图">
+          <div class="map-canvas" id="map_canvas" aria-label="地图画布"></div>
+
+          <div class="map-tools" aria-label="地图工具">
+            <button class="tool" id="zoom_in" type="button">＋</button>
+            <button class="tool" id="zoom_out" type="button">－</button>
+            <button class="tool" id="reset" type="button">重置</button>
+          </div>
+
+          <div class="zoom-ind" id="zoom_ind">100%</div>
+        </div>
+      </section>
+
+      <aside class="panel timeline reveal">
+        <div class="timeline-head">
+          <h2>我们的足迹</h2>
+          <p>点击时间线或地图标记，展开回忆卡片。</p>
+        </div>
+        <div class="tl" id="timeline"></div>
+      </aside>
+    </section>
+
+    <footer>
+      <div>为 你 &amp; 我 记录的旅途</div>
+      <div class="footer_right"><span>浪漫空间 · RomanceSpace</span></div>
+    </footer>
+  </div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="回忆卡片">
+    <div class="card">
+      <div class="card-head">
+        <div style="min-width:0;">
+          <h3 id="card_title">—</h3>
+          <p id="card_date">—</p>
+        </div>
+        <button class="close" id="close" type="button">关闭</button>
+      </div>
+      <div class="card-body" id="card_text">—</div>
+    </div>
+  </div>
+
+  <span id="locations_json_holder" style="display:none;">[
+  {"id":"city_01","name":"青岛","date":"2021.06","text":"海风把笑声吹得很远，那天你说：以后每年都来。","x":22,"y":38,"cover":""},
+  {"id":"city_02","name":"杭州","date":"2022.10","text":"桂花香落在衣袖，你把热奶茶塞到我手心。","x":56,"y":44,"cover":""},
+  {"id":"city_03","name":"成都","date":"2024.03","text":"夜色温柔，街灯像星星，我们把脚步放慢。","x":42,"y":62,"cover":""}
+]</span>
+
+  <script>
+    (function () {
+      const mapShell = document.getElementById("map_shell");
+      const canvas = document.getElementById("map_canvas");
+      const zoomInd = document.getElementById("zoom_ind");
+      const zoomIn = document.getElementById("zoom_in");
+      const zoomOut = document.getElementById("zoom_out");
+      const resetBtn = document.getElementById("reset");
+      const timeline = document.getElementById("timeline");
+
+      const modal = document.getElementById("modal");
+      const closeBtn = document.getElementById("close");
+      const cardTitle = document.getElementById("card_title");
+      const cardDate = document.getElementById("card_date");
+      const cardText = document.getElementById("card_text");
+
+      function openCard(loc) {
+        cardTitle.textContent = loc.name || \"—\";
+        cardDate.textContent = loc.date || \"—\";
+        cardText.textContent = loc.text || \"—\";
+        modal.classList.add(\"is_open\");
+      }
+
+      function closeCard() {
+        modal.classList.remove(\"is_open\");
+      }
+
+      if (closeBtn) closeBtn.addEventListener(\"click\", closeCard);
+      if (modal) {
+        modal.addEventListener(\"click\", function (e) {
+          if (e.target === modal) closeCard();
+        });
+      }
+      document.addEventListener(\"keydown\", function (e) {
+        if (e.key === \"Escape\") closeCard();
+      });
+
+      function safeParseLocations(raw) {
+        if (!raw) return [];
+        try {
+          const v = JSON.parse(raw);
+          if (Array.isArray(v)) return v;
+          return [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function getLocationsRaw() {
+        const holder = document.getElementById("locations_json_holder");
+        if (holder && holder.textContent && !isUninjected(holder.textContent)) return holder.textContent;
+        return holder ? holder.textContent : "";
+      }
+
+      function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+      // 地图状态
+      const state = {
+        scale: 1,
+        minScale: 0.75,
+        maxScale: 2.4,
+        x: 0,
+        y: 0,
+        dragging: false,
+        lastX: 0,
+        lastY: 0,
+        pointers: new Map(),
+        pinchStartDist: 0,
+        pinchStartScale: 1,
+        pinchStartCenter: null
+      };
+
+      function applyTransform() {
+        canvas.style.transform = \"translate(\" + state.x + \"px, \" + state.y + \"px) translate(-50%, -50%) scale(\" + state.scale + \")\";
+        zoomInd.textContent = Math.round(state.scale * 100) + \"%\";
+      }
+
+      function setScale(nextScale, anchorClientPoint) {
+        const prev = state.scale;
+        nextScale = clamp(nextScale, state.minScale, state.maxScale);
+        if (nextScale === prev) return;
+
+        // 以鼠标/触点为缩放中心：把 client 坐标换成 mapShell 本地坐标
+        const rect = mapShell.getBoundingClientRect();
+        const ax = anchorClientPoint ? (anchorClientPoint.x - (rect.left + rect.width / 2)) : 0;
+        const ay = anchorClientPoint ? (anchorClientPoint.y - (rect.top + rect.height / 2)) : 0;
+
+        // 变换前后保持锚点相对位置
+        const ratio = nextScale / prev;
+        state.x = state.x - ax * (ratio - 1);
+        state.y = state.y - ay * (ratio - 1);
+        state.scale = nextScale;
+        applyTransform();
+      }
+
+      function resetView() {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      if (zoomIn) zoomIn.addEventListener(\"click\", function () { setScale(state.scale * 1.15); });
+      if (zoomOut) zoomOut.addEventListener(\"click\", function () { setScale(state.scale / 1.15); });
+      if (resetBtn) resetBtn.addEventListener(\"click\", resetView);
+
+      // 鼠标滚轮缩放
+      mapShell.addEventListener(\"wheel\", function (e) {
+        e.preventDefault();
+        const dir = e.deltaY > 0 ? -1 : 1;
+        const factor = dir > 0 ? 1.12 : 1 / 1.12;
+        setScale(state.scale * factor, { x: e.clientX, y: e.clientY });
+      }, { passive: false });
+
+      // Pointer 事件：拖拽 + 双指捏合
+      mapShell.addEventListener(\"pointerdown\", function (e) {
+        mapShell.setPointerCapture(e.pointerId);
+        state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        if (state.pointers.size === 1) {
+          state.dragging = true;
+          state.lastX = e.clientX;
+          state.lastY = e.clientY;
+        }
+
+        if (state.pointers.size === 2) {
+          const pts = Array.from(state.pointers.values());
+          const dx = pts[0].x - pts[1].x;
+          const dy = pts[0].y - pts[1].y;
+          state.pinchStartDist = Math.hypot(dx, dy);
+          state.pinchStartScale = state.scale;
+          state.pinchStartCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+        }
+      });
+
+      mapShell.addEventListener(\"pointermove\", function (e) {
+        if (!state.pointers.has(e.pointerId)) return;
+        state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        if (state.pointers.size === 1 && state.dragging) {
+          const dx = e.clientX - state.lastX;
+          const dy = e.clientY - state.lastY;
+          state.lastX = e.clientX;
+          state.lastY = e.clientY;
+          state.x += dx;
+          state.y += dy;
+          applyTransform();
+        }
+
+        if (state.pointers.size === 2) {
+          const pts = Array.from(state.pointers.values());
+          const dx = pts[0].x - pts[1].x;
+          const dy = pts[0].y - pts[1].y;
+          const dist = Math.hypot(dx, dy);
+          const center = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+          const ratio = dist / (state.pinchStartDist || dist);
+          setScale(state.pinchStartScale * ratio, center);
+          state.dragging = false;
+        }
+      });
+
+      function endPointer(e) {
+        if (state.pointers.has(e.pointerId)) state.pointers.delete(e.pointerId);
+        if (state.pointers.size === 0) state.dragging = false;
+      }
+      mapShell.addEventListener(\"pointerup\", endPointer);
+      mapShell.addEventListener(\"pointercancel\", endPointer);
+      mapShell.addEventListener(\"pointerleave\", function () { state.dragging = false; });
+
+      // 渲染地点（marker + timeline）
+      function render() {
+        const raw = getLocationsRaw();
+        const locations = safeParseLocations(raw);
+        canvas.innerHTML = \"\";
+        timeline.innerHTML = \"\";
+
+        locations.forEach(function (loc, idx) {
+          const x = clamp(Number(loc.x || 50), 0, 100);
+          const y = clamp(Number(loc.y || 50), 0, 100);
+
+          const m = document.createElement(\"button\");
+          m.type = \"button\";
+          m.className = \"marker\";
+          m.style.left = x + \"%\";
+          m.style.top = y + \"%\";
+          m.setAttribute(\"aria-label\", (loc.name || \"地点\") + \" 标记\");
+          m.addEventListener(\"click\", function (e) {
+            e.stopPropagation();
+            openCard(loc);
+          });
+          canvas.appendChild(m);
+
+          const item = document.createElement(\"div\");
+          item.className = \"tl-item\";
+          item.addEventListener(\"click\", function () {
+            openCard(loc);
+          });
+
+          const top = document.createElement(\"div\");
+          top.className = \"tl-top\";
+          const name = document.createElement(\"strong\");
+          name.textContent = loc.name || (\"地点 \" + (idx + 1));
+          const date = document.createElement(\"span\");
+          date.textContent = loc.date || \"\";
+          top.appendChild(name);
+          top.appendChild(date);
+
+          const text = document.createElement(\"div\");
+          text.className = \"tl-text\";
+          text.textContent = loc.text || \"\";
+
+          item.appendChild(top);
+          item.appendChild(text);
+          timeline.appendChild(item);
+        });
+      }
+
+      applyTransform();
+      resetView();
+      render();
+    })();
+  </script>
+</body>
+</html>
