@@ -22,7 +22,7 @@
     },
     {
       "id": "signal_btn_text",
-      "label": "按钮文ara",
+      "label": "按钮文案",
       "default": "发送信号",
       "type": "text"
     }
