@@ -1,0 +1,45 @@
+name: Validate Pull Request Templates
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+
+jobs:
+  validate:
+    name: Lint & Validate Templates
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history to diff correctly
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Detect changed template directories
+        id: changed
+        run: |
+          # Find directories in src/ that have changes in this PR
+          CHANGED=$(git diff --name-only origin/main HEAD -- src/ | grep '^src/' | cut -d'/' -f2 | sort -u)
+          echo "Templates changed in PR: $CHANGED"
+          TEMPLATES=$(echo "$CHANGED" | tr '\n' ',' | sed 's/,$//')
+          echo "templates=$TEMPLATES" >> "$GITHUB_OUTPUT"
+
+      - name: Run Validation Script
+        if: steps.changed.outputs.templates != ''
+        run: |
+          IFS=',' read -ra TMPL_LIST <<< "${{ steps.changed.outputs.templates }}"
+          for tmpl in "${TMPL_LIST[@]}"; do
+            tmpl=$(echo "$tmpl" | xargs)
+            DIR="src/$tmpl"
+            echo "🔎 Validating: $tmpl"
+            node scripts/validate-template.js "$tmpl" "$DIR"
+          done

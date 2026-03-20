@@ -38,6 +38,16 @@ jobs:
           TEMPLATES=$(echo "$CHANGED" | tr '\n' ',' | sed 's/,$//')
           echo "templates=$TEMPLATES" >> "$GITHUB_OUTPUT"
 
+      - name: Validate changed templates
+        if: steps.changed.outputs.templates != ''
+        run: |
+          IFS=',' read -ra TMPL_LIST <<< "${{ steps.changed.outputs.templates }}"
+          for tmpl in "${TMPL_LIST[@]}"; do
+            tmpl=$(echo "$tmpl" | xargs)
+            DIR="src/$tmpl"
+            node scripts/validate-template.js "$tmpl" "$DIR"
+          done
+
       - name: Upload each changed template
         if: steps.changed.outputs.templates != ''
         env:
