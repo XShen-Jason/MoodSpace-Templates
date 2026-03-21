@@ -398,6 +398,115 @@
       color: transparent;
     }
 
+    .modal{
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      background: rgba(0,0,0,0.52);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .modal.is_open{ display: flex; }
+
+    .modal_card{
+      width: min(640px, 100%);
+      border-radius: var(--r-xl);
+      border: 1px solid rgba(255,255,255,0.24);
+      background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06));
+      box-shadow: 0 30px 90px rgba(0,0,0,0.76);
+      backdrop-filter: blur(26px) saturate(1.35);
+      -webkit-backdrop-filter: blur(26px) saturate(1.35);
+      overflow: hidden;
+      position: relative;
+    }
+    .modal_card::before{
+      content:"";
+      position:absolute;
+      inset:-60%;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.18), transparent 58%),
+        radial-gradient(circle at 100% 100%, rgba(96,165,250,0.14), transparent 58%);
+      mix-blend-mode: soft-light;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+    .modal_head{
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.14);
+    }
+    .modal_head h3{
+      font-size: 16px;
+      color: rgba(255,255,255,0.94);
+      letter-spacing: 0.02em;
+    }
+    .modal_head p{
+      font-size: 12px;
+      color: rgba(255,255,255,0.66);
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .modal_close{
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(0,0,0,0.18);
+      color: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: transform var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+    .modal_close:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.34);
+      background: rgba(255,255,255,0.06);
+    }
+    .modal_body{
+      position: relative;
+      padding: 12px 14px 14px;
+      font-size: 13px;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.90);
+      white-space: pre-line;
+    }
+
+    .photo_grid{
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .photo{
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 16px;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.58);
+      position: relative;
+      overflow: hidden;
+    }
+    .photo::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(145deg, rgba(0,0,0,0.16), rgba(255,255,255,0.06));
+      mix-blend-mode: soft-light;
+    }
+
     @keyframes pulse { 0%,100%{ transform: scale(1); opacity: 0.9; } 50%{ transform: scale(1.35); opacity: 1; } }
     @keyframes drift { 0%{ transform: translate3d(-8px,-6px,0) scale(1.02); } 100%{ transform: translate3d(10px,12px,0) scale(1.02);} }
     @keyframes sheen { 0%{ opacity: 0; transform: translateX(-60%);} 35%{opacity:1;} 100%{opacity:0; transform: translateX(40%);} }
@@ -414,6 +523,7 @@
       .hero h1{ font-size: 24px; }
       .btn{ width: 100%; justify-content: center; }
       .actions{ flex-direction: column; }
+      .photo_grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -488,6 +598,34 @@
     </footer>
   </div>
 
+  <div class="modal" id="modal_love" role="dialog" aria-modal="true" aria-label="情话弹窗">
+    <div class="modal_card">
+      <div class="modal_head">
+        <div style="min-width:0;">
+          <h3 data_text="modal_love_title">{{ modal_love_title }}</h3>
+          <p><span data_text="to_name">{{ to_name }}</span> · <span data_text="date">{{ date }}</span></p>
+        </div>
+        <button class="modal_close" id="close_love" type="button">关闭</button>
+      </div>
+      <div class="modal_body" data_text="modal_love_body">{{ modal_love_body }}</div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal_gallery" role="dialog" aria-modal="true" aria-label="照片弹窗">
+    <div class="modal_card">
+      <div class="modal_head">
+        <div style="min-width:0;">
+          <h3 data_text="modal_gallery_title">{{ modal_gallery_title }}</h3>
+          <p data_text="modal_gallery_subline">{{ modal_gallery_subline }}</p>
+        </div>
+        <button class="modal_close" id="close_gallery" type="button">关闭</button>
+      </div>
+      <div class="modal_body">
+        <div class="photo_grid" id="photo_grid"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function () {
       const root = document.documentElement;
@@ -495,6 +633,11 @@
       const ctaSecondary = document.getElementById("cta_secondary");
       const confession = document.getElementById("confession");
       const content = document.getElementById("content");
+      const modalLove = document.getElementById("modal_love");
+      const modalGallery = document.getElementById("modal_gallery");
+      const closeLove = document.getElementById("close_love");
+      const closeGallery = document.getElementById("close_gallery");
+      const photoGrid = document.getElementById("photo_grid");
 
       function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
@@ -533,6 +676,11 @@
           promise_3: "走到哪里都牵手，走到最后也不放手。",
           cta_primary: "把答案给我",
           cta_secondary: "继续向下看",
+          modal_love_title: "今夜想对你说",
+          modal_love_body: "遇见你之后，星河都变得具体。\n\n想和你分享每一次日出、每一顿晚餐、每一个普通却闪亮的日子。\n\n你愿意，和我把喜欢写成以后吗？",
+          modal_gallery_title: "甜蜜光影",
+          modal_gallery_subline: "把我们的小宇宙，装进每一帧。",
+          modal_gallery_images: "https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg\nhttps://images.pexels.com/photos/1024992/pexels-photo-1024992.jpeg\nhttps://images.pexels.com/photos/556667/pexels-photo-556667.jpeg",
           footer_left: "写给 你 · 来自 我",
           footer_right: "浪漫空间 · RomanceSpace",
           main_color: "#a78bfa",
@@ -589,8 +737,66 @@
         window.scrollTo({ top: top, behavior: "smooth" });
       }
 
-      if (ctaPrimary) ctaPrimary.addEventListener("click", function () { scrollToEl(confession); });
-      if (ctaSecondary) ctaSecondary.addEventListener("click", function () { scrollToEl(content); });
+      function openModal(el) {
+        if (!el) return;
+        el.classList.add("is_open");
+      }
+      function closeModal(el) {
+        if (!el) return;
+        el.classList.remove("is_open");
+      }
+
+      if (ctaPrimary) {
+        ctaPrimary.addEventListener("click", function () {
+          openModal(modalLove);
+        });
+      }
+      if (ctaSecondary) {
+        ctaSecondary.addEventListener("click", function () {
+          openModal(modalGallery);
+          scrollToEl(content);
+        });
+      }
+
+      if (closeLove) closeLove.addEventListener("click", function () { closeModal(modalLove); });
+      if (closeGallery) closeGallery.addEventListener("click", function () { closeModal(modalGallery); });
+
+      [modalLove, modalGallery].forEach(function (m) {
+        if (!m) return;
+        m.addEventListener("click", function (e) {
+          if (e.target === m) closeModal(m);
+        });
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal(modalLove);
+          closeModal(modalGallery);
+        }
+      });
+
+      function parseImages(raw) {
+        if (!raw) return [];
+        return raw.split(/\r?\n|,/).map(function (s) { return s.trim(); }).filter(Boolean);
+      }
+
+      function buildPhotoGrid() {
+        if (!photoGrid) return;
+        var raw = "{{ modal_gallery_images }}";
+        if (isUninjected(raw)) {
+          raw = "https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg\nhttps://images.pexels.com/photos/1024992/pexels-photo-1024992.jpeg\nhttps://images.pexels.com/photos/556667/pexels-photo-556667.jpeg";
+        }
+        const urls = parseImages(raw);
+        if (!urls.length) return;
+        photoGrid.innerHTML = "";
+        urls.forEach(function (url) {
+          const div = document.createElement("div");
+          div.className = "photo";
+          div.style.backgroundImage = "url('" + url.replace(/'/g, "\\'") + "')";
+          photoGrid.appendChild(div);
+        });
+      }
+      buildPhotoGrid();
 
       // 星空：轻量 Canvas 星点（无外部库）
       const canvas = document.getElementById("stars");

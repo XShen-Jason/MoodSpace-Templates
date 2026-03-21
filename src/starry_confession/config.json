@@ -1,8 +1,6 @@
 {
   "name": "starry_confession",
   "title": "星空告白",
-  "tier": "pro",
-  "price": 9.9,
   "fields": [
     { "id": "page_title", "label": "页面标题（浏览器标题）", "default": "星空告白 · 浪漫空间", "type": "text" },
     { "id": "headline", "label": "主标题", "default": "星空告白", "type": "text" },
@@ -27,6 +25,11 @@
 
     { "id": "cta_primary", "label": "主按钮文案", "default": "把答案给我", "type": "text" },
     { "id": "cta_secondary", "label": "次按钮文案", "default": "继续向下看", "type": "text" },
+    { "id": "modal_love_title", "label": "情话弹窗标题", "default": "今夜想对你说", "type": "text" },
+    { "id": "modal_love_body", "label": "情话弹窗正文（可换行）", "default": "遇见你之后，星河都变得具体。\\n\\n想和你分享每一次日出、每一顿晚餐、每一个普通却闪亮的日子。\\n\\n你愿意，和我把喜欢写成以后吗？", "type": "textarea" },
+    { "id": "modal_gallery_title", "label": "照片弹窗标题", "default": "甜蜜光影", "type": "text" },
+    { "id": "modal_gallery_subline", "label": "照片弹窗副标题", "default": "把我们的小宇宙，装进每一帧。", "type": "text" },
+    { "id": "modal_gallery_images", "label": "照片列表 URL（换行或逗号分隔）", "default": "https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg\\nhttps://images.pexels.com/photos/1024992/pexels-photo-1024992.jpeg\\nhttps://images.pexels.com/photos/556667/pexels-photo-556667.jpeg", "type": "textarea" },
 
     { "id": "main_color", "label": "主色（星光紫 HEX）", "default": "#a78bfa", "type": "text" },
     { "id": "secondary_color", "label": "辅色（霓虹蓝 HEX）", "default": "#60a5fa", "type": "text" },
