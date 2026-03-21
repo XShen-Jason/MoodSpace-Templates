@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LOVE ACHIEVEMENT SYSTEM</title>
+    <title>LOVE RPG SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,238 +11,143 @@
             --pixel-orange: #fb923c;
             --pixel-black: #1a1a1a;
             --pixel-white: #f5f5f5;
-            --pixel-border: 4px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            image-rendering: pixelated; /* 核心：保持像素锐利 */
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; image-rendering: pixelated; }
 
         body {
-            background-color: #2d5a27; /* 复古草地绿 */
-            background-image: 
-                linear-gradient(45deg, #356a2e 25%, transparent 25%), 
-                linear-gradient(-45deg, #356a2e 25%, transparent 25%), 
-                linear-gradient(45deg, transparent 75%, #356a2e 75%), 
-                linear-gradient(-45deg, transparent 75%, #356a2e 75%);
-            background-size: 40px 40px;
-            font-family: 'ZCOOL KuaiLe', 'Courier New', cursive;
-            color: var(--pixel-black);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #2d5a27;
+            background-image: repeating-conic-gradient(#356a2e 0% 25%, #2d5a27 0% 50%) 50% / 40px 40px;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            display: flex; justify-content: center; min-height: 100vh; padding: 20px;
         }
 
         .game-ui {
-            width: 100%;
-            max-width: 500px;
+            width: 100%; max-width: 500px;
             background: var(--pixel-white);
-            border: var(--pixel-border) solid var(--pixel-black);
+            border: 4px solid var(--pixel-black);
             box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            position: relative; display: flex; flex-direction: column;
         }
 
-        /* 顶部状态栏 */
+        /* 状态栏 */
         .status-bar {
-            background: var(--pixel-black);
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
+            background: var(--pixel-black); color: white; padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .hp-bar-container {
-            width: 120px;
-            height: 16px;
-            background: #444;
-            border: 2px solid #fff;
-            position: relative;
-        }
-
-        .hp-fill {
-            width: 85%;
-            height: 100%;
-            background: var(--pixel-green);
-            transition: width 1s ease-in-out;
-        }
+        .hp-fill { width: 90%; height: 16px; background: var(--pixel-green); border: 2px solid #fff; }
 
         /* 成就网格 */
         .achievement-grid {
+            padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+        }
+
+        .ac-card {
+            border: 3px solid var(--pixel-black); padding: 15px; text-align: center;
+            background: #eee; cursor: pointer; transition: 0.1s;
+        }
+
+        .ac-card:hover { transform: translateY(-4px); background: #fff; box-shadow: 0 4px 0 var(--pixel-black); }
+
+        .ac-icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+        /* 隐藏的像素弹窗 */
+        .pixel-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center;
             padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            flex-grow: 1;
         }
 
-        .achievement-card {
-            border: 3px solid var(--pixel-black);
-            padding: 10px;
-            text-align: center;
-            background: #eee;
-            transition: transform 0.1s;
-            cursor: pointer;
-            position: relative;
+        .modal-content {
+            background: var(--pixel-white); border: 4px solid var(--pixel-black);
+            width: 100%; max-width: 400px; padding: 20px; position: relative;
+            animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .achievement-card:hover {
-            transform: translateY(-4px);
-            background: #fff;
+        .modal-title { font-size: 1.5rem; color: var(--pixel-orange); margin-bottom: 15px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+
+        .modal-body { font-size: 1rem; line-height: 1.6; color: #333; margin-bottom: 20px; }
+
+        .close-btn { 
+            width: 100%; padding: 10px; background: var(--pixel-black); color: white; 
+            border: none; cursor: pointer; font-family: inherit;
         }
 
-        .icon {
-            font-size: 2rem;
-            margin-bottom: 5px;
-        }
+        @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
 
-        .locked {
-            filter: grayscale(1);
-            opacity: 0.6;
-        }
-
-        /* 对话框 */
-        .dialog-box {
-            margin: 20px;
-            padding: 15px;
-            border: 3px solid var(--pixel-black);
-            background: #fff;
-            position: relative;
-            min-height: 100px;
-        }
-
-        .dialog-box::after {
-            content: "▼";
-            position: absolute;
-            bottom: 5px;
-            right: 10px;
-            animation: blink 0.8s infinite;
-        }
-
-        /* 按钮 */
-        .pixel-btn {
-            margin: 0 20px 20px;
-            padding: 15px;
-            background: var(--pixel-orange);
-            border: 3px solid var(--pixel-black);
-            box-shadow: 0 4px 0 #c2410c;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            text-shadow: 2px 2px var(--pixel-black);
-        }
-
-        .pixel-btn:active {
-            transform: translateY(4px);
-            box-shadow: none;
-        }
-
-        /* 动画 */
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        @keyframes explode {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        .particle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: var(--pixel-orange);
-            pointer-events: none;
-        }
-
-        @media (max-width: 400px) {
-            .achievement-grid { grid-template-columns: 1fr; }
-        }
+        .particle { position: absolute; width: 8px; height: 8px; pointer-events: none; z-index: 200; }
     </style>
 </head>
 <body>
 
     <div class="game-ui">
         <div class="status-bar">
-            <div>
-                <div>PLAYER: {{ player_name }}</div>
-                <div>LEVEL: {{ love_level }}</div>
-            </div>
-            <div>
-                <div style="margin-bottom: 4px;">LOVE HP</div>
-                <div class="hp-bar-container">
-                    <div class="hp-fill"></div>
-                </div>
-            </div>
+            <div style="font-size: 0.8rem;">PLAYER: {{ player_name }}<br>LEVEL: {{ love_level }}</div>
+            <div style="width: 100px;"><div style="font-size: 0.6rem; text-align: right;">LOVE HP</div><div class="hp-fill"></div></div>
         </div>
 
-        <div style="padding: 10px 20px 0; font-size: 0.8rem; color: #666;">
-            DAYS ACTIVE: {{ love_days }}
-        </div>
+        <div style="padding: 10px 20px; font-size: 0.8rem;">ACTIVE: {{ love_days }}</div>
 
         <div class="achievement-grid">
-            <div class="achievement-card" onclick="showMsg('解锁成就：初次遇见！')">
-                <div class="icon">🌱</div>
-                <div style="font-size: 0.8rem;">新手村相遇</div>
+            <div class="ac-card" onclick="openModal('{{ ac_1_title }}', '{{ ac_1_msg }}', event)">
+                <div class="ac-icon">{{ ac_1_icon }}</div>
+                <div style="font-size: 0.9rem;">{{ ac_1_title }}</div>
             </div>
-            <div class="achievement-card" onclick="showMsg('解锁成就：心动瞬间！')">
-                <div class="icon">❤️</div>
-                <div style="font-size: 0.8rem;">好感度突破</div>
+            <div class="ac-card" onclick="openModal('{{ ac_2_title }}', '{{ ac_2_msg }}', event)">
+                <div class="ac-icon">{{ ac_2_icon }}</div>
+                <div style="font-size: 0.9rem;">{{ ac_2_title }}</div>
             </div>
-            <div class="achievement-card locked" onclick="showMsg('需消耗 99 个回忆碎片解锁')">
-                <div class="icon">💍</div>
-                <div style="font-size: 0.8rem;">终极誓言</div>
+            <div class="ac-card" onclick="openModal('{{ ac_3_title }}', '{{ ac_3_msg }}', event)">
+                <div class="ac-icon">{{ ac_3_icon }}</div>
+                <div style="font-size: 0.9rem;">{{ ac_3_title }}</div>
             </div>
-            <div class="achievement-card" onclick="showMsg('成就：环游世界（1/10）')">
-                <div class="icon">✈️</div>
-                <div style="font-size: 0.8rem;">共同旅行</div>
+            <div class="ac-card" onclick="openModal('{{ ac_4_title }}', '{{ ac_4_msg }}', event)">
+                <div class="ac-icon">{{ ac_4_icon }}</div>
+                <div style="font-size: 0.9rem;">{{ ac_4_title }}</div>
             </div>
         </div>
 
-        <div class="dialog-box">
-            <p id="typing-text" style="font-size: 0.9rem;">
-                {{ final_achievement }}<br><br>
-                {{ rpg_quote }}
-            </p>
+        <div style="margin: 20px; padding: 15px; border: 2px solid #000; background: #fff; font-size: 0.8rem;">
+            > 系统消息：点击上方成就方格，查看隐藏的回忆细节。
         </div>
+    </div>
 
-        <button class="pixel-btn" onclick="createExplosion(event)">解锁新回忆</button>
+    <div id="pixelModal" class="pixel-modal">
+        <div class="modal-content">
+            <div id="mTitle" class="modal-title">成就达成</div>
+            <div id="mBody" class="modal-body">内容加载中...</div>
+            <button class="close-btn" onclick="closeModal()">返回游戏</button>
+        </div>
     </div>
 
     <script>
-        function showMsg(text) {
-            const box = document.getElementById('typing-text');
-            box.innerText = "> " + text;
+        function openModal(title, msg, e) {
+            document.getElementById('mTitle').innerText = title;
+            document.getElementById('mBody').innerText = msg;
+            document.getElementById('pixelModal').style.display = 'flex';
+            createExplosion(e.clientX, e.clientY);
         }
 
-        function createExplosion(e) {
-            const btn = e.target;
-            const rect = btn.getBoundingClientRect();
-            
-            for(let i=0; i<10; i++) {
+        function closeModal() {
+            document.getElementById('pixelModal').style.display = 'none';
+        }
+
+        function createExplosion(x, y) {
+            for(let i=0; i<15; i++) {
                 const p = document.createElement('div');
                 p.className = 'particle';
-                p.style.left = (e.clientX - rect.left) + 'px';
-                p.style.top = (e.clientY - rect.top) + 'px';
-                p.style.backgroundColor = ['#ff0', '#f0f', '#0ff'][Math.floor(Math.random()*3)];
-                
-                btn.appendChild(p);
+                p.style.left = x + 'px';
+                p.style.top = y + 'px';
+                p.style.backgroundColor = ['#fb923c', '#4ade80', '#fff'][Math.floor(Math.random()*3)];
+                document.body.appendChild(p);
                 
                 const angle = Math.random() * Math.PI * 2;
-                const dist = Math.random() * 50 + 50;
-                
+                const dist = Math.random() * 80 + 20;
                 p.animate([
                     { transform: 'translate(0,0)', opacity: 1 },
                     { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px)`, opacity: 0 }
-                ], { duration: 600, easing: 'ease-out' }).onfinish = () => p.remove();
+                ], { duration: 500 }).onfinish = () => p.remove();
             }
         }
     </script>

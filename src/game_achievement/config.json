@@ -2,35 +2,20 @@
   "name": "game_achievement_love",
   "title": "游戏成就恋爱簿",
   "fields": [
-    {
-      "id": "player_name",
-      "label": "玩家(昵称)",
-      "default": "Player One",
-      "type": "text"
-    },
-    {
-      "id": "love_level",
-      "label": "当前等级",
-      "default": "Lv.99",
-      "type": "text"
-    },
-    {
-      "id": "love_days",
-      "label": "恋爱天数",
-      "default": "520 Days",
-      "type": "text"
-    },
-    {
-      "id": "final_achievement",
-      "label": "终极成就文案",
-      "default": "恭喜你解锁「一生伴侣」终极成就！",
-      "type": "text"
-    },
-    {
-      "id": "rpg_quote",
-      "label": "游戏格言",
-      "default": "我们的爱情，是一场永不通关的 RPG。",
-      "type": "textarea"
-    }
+    { "id": "player_name", "label": "玩家名称", "default": "Player One", "type": "text" },
+    { "id": "love_level", "label": "好感等级", "default": "Lv.99", "type": "text" },
+    { "id": "love_days", "label": "恋爱天数", "default": "520 Days", "type": "text" },
+    { "id": "ac_1_title", "label": "成就1-标题", "default": "新手村相遇", "type": "text" },
+    { "id": "ac_1_icon", "label": "成就1-图标(Emoji)", "default": "🌱", "type": "text" },
+    { "id": "ac_1_msg", "label": "成就1-弹窗情话", "default": "那是我们故事的开始，在这个新手村，我遇见了此生最想守护的NPC。", "type": "textarea" },
+    { "id": "ac_2_title", "label": "成就2-标题", "default": "好感度突破", "type": "text" },
+    { "id": "ac_2_icon", "label": "成就2-图标(Emoji)", "default": "❤️", "type": "text" },
+    { "id": "ac_2_msg", "label": "成就2-弹窗情话", "default": "叮！系统提示：我对你的心动值已突破上限，无法计量。", "type": "textarea" },
+    { "id": "ac_3_title", "label": "成就3-标题", "default": "共同旅行", "type": "text" },
+    { "id": "ac_3_icon", "label": "成就3-图标(Emoji)", "default": "✈️", "type": "text" },
+    { "id": "ac_3_msg", "label": "成就3-弹窗情话", "default": "走遍地图的每一个坐标，只要身边是你，哪里都是隐藏关卡。", "type": "textarea" },
+    { "id": "ac_4_title", "label": "成就4-标题", "default": "终极誓言", "type": "text" },
+    { "id": "ac_4_icon", "label": "成就4-图标(Emoji)", "default": "💍", "type": "text" },
+    { "id": "ac_4_msg", "label": "成就4-弹窗情话", "default": "恭喜解锁终极成就：一生伴侣。此契约已存入灵魂存档，不可删除。", "type": "textarea" }
   ]
 }
