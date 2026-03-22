@@ -47,13 +47,16 @@
 | `default` | ❌ | `""` | **默认值**。用户未输入时，该值将作为默认填充内容。 |
 | `placeholder`| ❌ | (含 label 提示) | **提示文字**。显示在输入框内的灰色诱导文本。 |
 
-**超级范本：**
+**超级范本 (`config.json`):**
 ```json
 {
   "name": "love_letter",
   "title": "浪漫情书珍藏版",
+  "version": "1.1.0",
+  "status": "active",
   "tier": "free",
   "price": 9.9,
+  "static": false,
   "fields": [
     {
       "id": "message",
