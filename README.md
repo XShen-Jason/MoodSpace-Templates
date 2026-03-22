@@ -1,121 +1,252 @@
-# 🎁 MoodSpace 模板货架库 (Templates)
+# 🎁 MoodSpace 模板开发规范 (Developer Guide)
 
-本仓库是提供给前台用户的“货架”。这里面存放的每一个子文件夹，都是一套精美的、可支持响应式的 HTML 交互模板。当你在此处新增或修改模板代码后，平台将自动抓走它们并永久存储至对象存储 (R2)。
+本仓库是模板创作者的"货架"。每个 `src/` 下的子文件夹，都是一套完整的可定制 HTML 网页模板。通过 GitHub Actions 推送后，平台将自动将其存储至对象存储 (R2) 并上架到模板大厅。
 
-> **小白提示**：这个仓库本身并不部署任何长期运行的服务器！你在此处只写静态的网页代码（HTML/CSS/JS）。写好后，通过下面讲解的命令或自动渠道“推”给你的后端就算完事了。
-
----
-
-## 🏗️ 模板文件结构骨架
-
-你在 `src/` 下创建的任意一个新的模板文件夹，都必须严格遵守以下文件结构：
-
-1. `index.html`: 模板的本体源码（**核心：里面必须使用形如 `{{变量名}}` 的插值占位符**）。
-2. `config.json`: 向你的后端解释这个模板怎么收费、有哪些可填写的变动输入框。
-3. `preview.jpg` (不强制，但强烈推荐): 一张压缩在 500KB 以内的网页预览缩略图，用户在选画廊时看到的封面就是它。
-
-### ⚠️ 命名生死定则
-- 文件夹名必须且只能是：**纯小写英文字母 + 下划线**（例如：`starry_confession` 或 `film_memory_wall`）。
-- **绝对禁止使用空格、中文字符、大写字母或者特殊符号！** 这不仅会造成上传时 R2 路径断裂，还可能导致用户访问报错！
+> **核心承诺**：创作者在本地浏览器能正常运行的模板，上传后在平台的「大厅预览」和「Builder 实时预览」中，应当表现完全一致。
 
 ---
 
-## 📄 核心枢纽：`config.json` (或 `schema.json`) 字段深度剖析
+## 🏗️ 一、文件结构
 
-当你新增一号模板时，请严格编写这个控制端 JSON 文件。文件名也可以叫成 `schema.json`。
+```
+src/
+└── your_template_name/
+    ├── index.html      ← 必须。模板主体，含 {{ 变量 }} 占位符
+    ├── config.json     ← 必须。配置文件，定义字段与元数据
+    └── preview.jpg     ← 推荐。500KB 以内的封面图
+```
 
-### 基础元数据
+### 文件夹命名铁律
 
-| 字段名 | 必填 | 默认值 | 含义 |
+| ✅ 合法 | ❌ 非法 |
+| :--- | :--- |
+| `starry_confession` | `StarryConfession` (大写) |
+| `film_memory_wall` | `film memory wall` (空格) |
+| `love_letter_v2` | `爱情信件` (中文) |
+
+**只允许：小写英文字母、数字、下划线。** 违反命名规则会导致 R2 路径断裂和用户访问 404。
+
+---
+
+## 📄 二、`config.json` 字段说明
+
+### 2.1 根字段（元数据）
+
+| 字段 | 必填 | 默认值 | 说明 |
 | :--- | :---: | :--- | :--- |
-| `"name"` | ✅ | (需与文件夹名一致) | **技术标识名**。务必一字不差地和此模板的文件夹名称保持一致。 |
-| `"title"` | ✅ | (同 name) | **界面显示名称**（支持中文）。用户在网站“随便逛逛”时看到的就是这个美丽的名字。 |
-| `"tier"` | ❌ | `"free"` | **收费分级隔离**。填 `"free"` 开放使用；填 `"pro"` 限制高级会员使用。 |
-| `"price"` | ❌ | `0` | **单价**。若系统设计了单独买断功能，可标明售价比如 `19.9`。 |
-| `"status"` | ❌ | `"active"` | **模板状态**。`"active"` 正常展示；`"offline"` 下架隐藏。 |
-| `"static"` | ❌ | `false` | **非定制属性**。填 `true` 时，意为这不是个能定制的网页，用户无法输入内容。 |
-| `"version"` | ❌ | - | **语义化版本号** (如 `1.1.0`)。目前仅供开发者标记迭代，不干预系统渲染。 |
-### `"fields"` 动态配置项（向用户暴露的输入框）
+| `name` | ✅ | — | 技术标识名，**必须与文件夹名完全一致** |
+| `title` | ✅ | — | 界面展示名称，支持中文，显示于模板大厅 |
+| `tier` | ❌ | `"free"` | 权限分级：`"free"` 开放 / `"pro"` 仅高级会员 |
+| `price` | ❌ | `0` | 单独买断价格（单位：元），保留字段 |
+| `status` | ❌ | `"active"` | `"active"` 正常展示 / `"offline"` 下架隐藏 |
+| `static` | ❌ | `false` | `true` 表示固定模板，无用户可编辑字段 |
+| `version` | ❌ | — | 语义化版本号（如 `1.2.0`），用于缓存刷新 |
 
-这是一个 JSON 数组（Array）。你在这里定义几个，前端编辑器的左侧就会自动生出几个输入框！
+### 2.2 `fields` 数组（用户输入项）
 
-| 字段名 | 必填 | 默认值 | 含义 |
+每个 field 对象定义 Builder 左侧一个输入框：
+
+| 字段 | 必填 | 默认值 | 说明 |
 | :--- | :---: | :--- | :--- |
-| `id` (or `key`) | ✅ | - | **数据键名**。如果在 JSON 写了 `"id": "msg"`, 那么你的 `index.html` 源码里的 `{{msg}}` 都会被替换。 |
-| `label` | ❌ | (同 id) | **中文标题**。显示在左侧输入框正上方。 |
-| `type` | ❌ | `text` | **格式类型**。支持 `text` (单行框) 或 `textarea` (多行文本框)。 |
-| `default` | ❌ | `""` | **默认值**。用户未输入时，该值将作为默认填充内容。 |
-| `placeholder`| ❌ | (含 label 提示) | **提示文字**。显示在输入框内的灰色诱导文本。 |
+| `id` | ✅ | — | 字段键名，对应 `index.html` 里的 `{{ id }}` |
+| `label` | ❌ | 同 id | 输入框标题（显示给用户的中文名） |
+| `type` | ❌ | `"text"` | `"text"` 单行 / `"textarea"` 多行 |
+| `default` | ❌ | `""` | 字段默认值，用于 Builder 的实时预览初始化 |
+| `placeholder` | ❌ | — | 输入框占位提示文字 |
 
-**超级范本 (`config.json`):**
+**完整示例：**
+
 ```json
 {
-  "name": "love_letter",
-  "title": "浪漫情书珍藏版",
-  "version": "1.1.0",
+  "name": "starry_confession",
+  "title": "星空告白",
+  "version": "1.0.0",
   "status": "active",
   "tier": "free",
-  "price": 9.9,
   "static": false,
   "fields": [
-    {
-      "id": "message",
-      "label": "深情蜜语",
-      "type": "textarea",
-      "default": "因为刚好遇见你，留下十年的期许。",
-      "placeholder": "想在这个午夜对 TA 偷偷诉说什么？"
-    }
+    { "id": "headline", "label": "主标题", "default": "星空告白", "type": "text" },
+    { "id": "confession_body", "label": "告白正文", "default": "我喜欢你。", "type": "textarea" },
+    { "id": "main_color", "label": "主色 (HEX)", "default": "#a78bfa", "type": "text" }
   ]
 }
 ```
 
 ---
 
-## 👨‍🎨 前端切图仔铁律 (Definition of Done)
+## ✍️ 三、`index.html` 编写规范
 
-所有模板代码必须通过这两项残酷测试才能放生生产环境：
-1. **iPhone 响应式大考**: 禁止通过定宽爆出行内横向滚动条，否则体验惨不忍睹。建议加上 `viewport-fit=cover` 用以适配刘海。
-2. **CDN 相对宇宙**: HTML 里的所有的 CSS 文件与 JS、图片调用，路径最开头千万不要带斜杠 `/`，或者填上任何固定的协议名。必须用**相对路径**（形如 `src="./style.css"` 或 `src="assets/bg.jpg"`），这决定着网页上天入地能否在任意子域名环境下自由生长存活。
-3. **JS 注入安全准则**: **绝对禁止** 在 `<script>` 标签内直接将 `{{变量}}` 放入单/双引号中（如 `const val = "{{msg}}";`）。如果该变量包含换行符（如 `textarea` 类型），会导致 JS 语法错误（SyntaxError）从而使整个页面脚本失效。
-   - **正确做法**: 使用 ES6 的**反引号 (Backticks)** 来包裹可能包含换行的变量。
-     ```javascript
-     // ✅ 推荐做法：完美支持多行文本注入
-     const rawData = `{{my_variable}}`;
-     ```
+### 3.1 变量占位符
 
----
+使用 `{{ 变量名 }}` 语法（双花括号，变量名用小写 + 下划线），平台在渲染时会将其替换为用户填写的内容：
 
-## 🚀 新增模板自动上传法 (GitHub Actions)
+```html
+<title>{{ page_title }}</title>
 
-这是最省心舒服的自动管道：
-只要你往这个远程代码库推（`git push`）任何位于 `src/` 内部代码的变更，触发器就会抓紧跑动把你改好的模板“发射”到云端。
+<style>
+  :root {
+    --primary: {{ main_color }};   /* ✅ CSS 中可以直接用 */
+  }
+</style>
 
-### ⚙️ GitHub 自动化上传权限配置 (防踩坑指南)：
-为了让这个冰冷的自动化脚本知道往地球上哪里发送你的新模板并证明身份权限，你必须去这个当前代码库的网页进行以下授权：
-
-1. **设置超级管理密码 (Secrets)**
-   - 去这个 GitHub 仓库页上方点 `Settings` -> 左侧点打开 `Secrets and variables` -> 选择 `Actions`。
-   - 必须在此页面的 **Repository secrets** 区域新建一个密令。Name 填 `RS_ADMIN_KEY`。Value 填上你后端服务器那个至高无上的超级防盗后台大密码。
-2. **设定接受这些包裹的网关 (Variables / Secrets 均可容错)**
-   - 同样在这个标签页你还可以存一个新环境，叫做 `RS_WORKER_URL`。填上你的后台中转站（比如：`https://api.moodspace.xyz`）。
-   *(我已经彻底对代码加了最强的双检容错兜底：无论你是把它建在了红色的 Secrets 里，或者是白色的 Variables 里，又或者是你因为粗心把它给忘填了；只要它的老家和这篇 README 一致同名叫 `moodspace.xyz`，它就能通过自动兜底算法被丝滑地注入进去！保证绝无坠机的可能)*
-
----
-
-## 🛠️ 纯手工本地抢线打补丁 (手动传)
-
-如果你不使用 Git 或者临时要在本地修改了急着上传生效。可以在你这台开着此项目的电脑上进行终端敲代码：
-
-1. 克隆并进入仓库:
-   ```bash
-   git clone https://github.com/XShen-Jason/MoodSpace-Templates.git
-   cd MoodSpace-Templates
-   ```
-2. 安装必须的开发工具依赖: `npm install`
-2. 本地直接在根目录建一个 `.env` 文件。
-3. 把那个天下无敌的管理密码填进去：`RS_ADMIN_KEY=（你的大密码）`
-4. 呼起暴力推送脚本（以发布 `love_letter` 为例）：
-```bash
-# 命令格式： node scripts/upload-template.js {模板代号} ./src/{模板所在目录路径}
-node scripts/upload-template.js love_letter ./src/love_letter
+<h1>{{ headline }}</h1>
+<p>{{ confession_body }}</p>
 ```
+
+### 3.2 本地预览默认值（强烈推荐）
+
+为了让创作者在本地直接打开 `index.html` 时也有完整的默认展示效果，请在 `<script>` 中加入 `isUninjected()` 检测 + 默认值兜底逻辑：
+
+```html
+<script>
+  (function () {
+    // 判断某个值是否仍是未替换的占位符
+    function isUninjected(s) {
+      // ✅ 必须用 \{ \} 转义花括号！否则在 Preview 环境正则解析会报 SyntaxError
+      return typeof s === "string" && /\{\{\s*[a-z_]+\s*\}\}/.test(s);
+    }
+
+    // 检查页面是否已被平台注入数据
+    const needsDefaults = isUninjected(document.title) || isUninjected(document.body.textContent);
+    if (!needsDefaults) return; // 平台已注入，直接退出
+
+    // 以下默认值仅在「本地预览」或「Gallery 预览」时生效
+    const defaults = {
+      page_title: "星空告白 · 示例",
+      headline: "星空告白",
+      main_color: "#a78bfa",
+      // ... 其他字段
+    };
+
+    document.title = defaults.page_title;
+    // 根据情况设置 CSS 变量、文本内容等
+  })();
+</script>
+```
+
+### 3.3 JS 中使用变量的安全规范
+
+这是最容易踩坑的地方，请务必遵守。
+
+#### ❌ 禁止：变量放入单/双引号字符串
+
+```javascript
+// 当用户输入包含换行的内容（textarea 类型），注入后变成非法 JS
+var images = "{{ modal_gallery_images }}";   // ← SyntaxError！
+var density = '{{ bg_star_density }}';        // ← 同理，危险
+```
+
+#### ✅ 正确：使用 ES6 反引号（Backtick）包裹变量
+
+反引号原生支持多行字符串，注入任何内容都不会导致语法错误：
+
+```javascript
+var images = `{{ modal_gallery_images }}`;   // ✅ 多行安全
+var density = `{{ bg_star_density }}`;        // ✅ 安全
+
+// 配合 isUninjected 做兜底：
+if (!images || isUninjected(images)) {
+  images = "https://default-image.jpg";
+}
+```
+
+#### ❌ 禁止：正则表达式中花括号不转义
+
+在 `<script>` 中编写匹配 `{{ }}` 的正则时，**必须对 `{` 和 `}` 进行转义**。未转义的 `{{` 在 Preview（无变量替换）环境下，浏览器会把它解析为量词语法并抛出 SyntaxError：
+
+```javascript
+// ❌ 错误：未转义，在 Preview 中直接崩溃
+/{{\\s*[a-z_]+\\s*}}/.test(s)
+
+// ✅ 正确：转义花括号，所有环境下均安全
+/\{\{\s*[a-z_]+\s*\}\}/.test(s)
+```
+
+### 3.4 资源路径规范
+
+HTML 中引用的所有外部资源（CSS、JS 文件、图片等）**必须使用相对路径**，禁止以 `/` 开头或写死域名：
+
+```html
+<!-- ❌ 错误：会在子域名环境下路径断裂 -->
+<link rel="stylesheet" href="/assets/style.css">
+<script src="https://example.com/script.js"></script>
+
+<!-- ✅ 正确：相对路径，任何子域名下均可正常加载 -->
+<link rel="stylesheet" href="./style.css">
+<script src="assets/script.js"></script>
+```
+
+### 3.5 移动端响应式
+
+所有模板必须在手机屏幕（375px 宽度基准）上正常显示：
+
+```html
+<!-- 必须包含这行 viewport 设置 -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+```
+
+- 禁止使用固定像素宽度（`width: 1200px`）导致横向滚动条
+- 使用 `min-width: 0` 配合 flex/grid 防止内容溢出
+
+---
+
+## 🧪 四、发布前自检清单
+
+在推送到 GitHub 之前，请逐项确认：
+
+```
+□ 本地在浏览器直接打开 index.html，页面显示正常、按钮可点击
+□ config.json 的 name 字段与文件夹名称完全一致
+□ JS 中的变量注入全部使用反引号 ` ` `，而非单/双引号
+□ isUninjected 正则中的花括号已转义：\{ 和 \}
+□ 所有资源路径使用相对路径（无 / 开头，无写死域名）
+□ 页面在 375px 宽度下无横向溢出
+□ 无遗留调试代码（console.log、alert、测试用硬编码值）
+□ config.json 已更新版本号（若修改了已上线模板）
+```
+
+---
+
+## 🚀 五、发布流程
+
+### 方式一：GitHub Actions 自动部署（推荐）
+
+向 `main` 分支推送任何 `src/` 内的代码变更，CI 流水线将自动检测改动的模板并上传至 R2：
+
+```bash
+git add src/your_template/
+git commit -m "feat(template): add starry_confession v1.0.0"
+git push origin main
+```
+
+**前置配置**（仅需一次）：
+
+在 GitHub 仓库 → `Settings` → `Secrets and variables` → `Actions` 中添加：
+- `RS_ADMIN_KEY`：后端管理员密钥
+- `RS_WORKER_URL`：API 网关地址（如 `https://api.moodspace.xyz`）
+
+### 方式二：本地手动上传
+
+```bash
+# 1. 安装依赖
+npm install
+
+# 2. 配置密钥（根目录创建 .env 文件）
+echo "RS_ADMIN_KEY=你的密钥" > .env
+
+# 3. 执行上传脚本
+node scripts/upload-template.js starry_confession ./src/starry_confession
+```
+
+---
+
+## ❓ 六、常见问题排查
+
+| 症状 | 根因 | 解决方法 |
+| :--- | :--- | :--- |
+| Preview 页面报 `SyntaxError: Unexpected token '}'` | `isUninjected` 正则中花括号未转义 | 改为 `/\{\{...\}\}/` |
+| Builder 及 Preview 按钮点不了 | `{{ 变量 }}` 直接放在 JS 双引号字符串中，用户输入包含换行导致语法错误 | 改用反引号包裹 |
+| 发布后 CSS/图片资源 404 | 资源路径以 `/` 开头 | 改为相对路径 `./` |
+| 本地正常，Gallery 预览全是空白 | 模板没有本地默认值兜底逻辑 | 添加 `isUninjected()` + defaults 检测 |
+| 上传后模板大厅不显示新模板 | `config.json` 的 `name` 与文件夹名不一致，或 `status` 为 `"offline"` | 检查 `name` 字段，确保 `status: "active"` |
+| 用户端看到 `{{ headline }}` 原始占位符 | 模板字段 id 与 HTML 中的 `{{ }}` 变量名拼写不一致 | 检查 `config.json` 中的 `id` 和 HTML 中的 `{{ id }}` 是否对应 |
