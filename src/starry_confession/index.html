@@ -626,17 +626,8 @@
     </div>
   </div>
 
-  <!-- 隐藏的数据注入区：避免直接在 JS 字符串中注入导致换行符引发的 SyntaxError -->
-  <div style="display:none" aria-hidden="true">
-    <div id="data_gallery_images">{{ modal_gallery_images }}</div>
-    <div id="data_star_density">{{ bg_star_density }}</div>
-  </div>
-
   <script>
-    function initStarryConfession() {
-      // 如果已经初始化，则不再重新执行
-      if (window._starryInitialized) return;
-      
+    (function () {
       const root = document.documentElement;
       const ctaPrimary = document.getElementById("cta_primary");
       const ctaSecondary = document.getElementById("cta_secondary");
@@ -647,14 +638,6 @@
       const closeLove = document.getElementById("close_love");
       const closeGallery = document.getElementById("close_gallery");
       const photoGrid = document.getElementById("photo_grid");
-      const canvas = document.getElementById("stars");
-
-      // 安全检查：DOM元素是否已就绪。如果在SPA里刚注入可能还拿不到
-      if (!canvas || !ctaPrimary) {
-          return false;
-      }
-      
-      window._starryInitialized = true;
 
       function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
@@ -799,8 +782,7 @@
 
       function buildPhotoGrid() {
         if (!photoGrid) return;
-        const dataEl = document.getElementById("data_gallery_images");
-        var raw = dataEl ? dataEl.textContent.trim() : "";
+        var raw = `{{ modal_gallery_images }}`;
         if (!raw || isUninjected(raw)) {
           raw = "https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg\nhttps://images.pexels.com/photos/1024992/pexels-photo-1024992.jpeg\nhttps://images.pexels.com/photos/556667/pexels-photo-556667.jpeg";
         }
@@ -817,12 +799,12 @@
       buildPhotoGrid();
 
       // 星空：轻量 Canvas 星点（无外部库）
-      const ctx = canvas.getContext ? canvas.getContext("2d") : null;
+      const canvas = document.getElementById("stars");
+      const ctx = canvas && canvas.getContext ? canvas.getContext("2d") : null;
       let stars = [];
       let last = 0;
       
-      const densityEl = document.getElementById("data_star_density");
-      let densityRaw = densityEl ? densityEl.textContent.trim() : "";
+      let densityRaw = `{{ bg_star_density }}`;
       let density = parseFloat(densityRaw);
 
       if (isNaN(density) || isUninjected(densityRaw)) {
@@ -880,22 +862,7 @@
       resize();
       window.addEventListener("resize", resize);
       requestAnimationFrame(draw);
-      
-      return true;
-    }
-
-    // 平台可能使用 innerHTML 或通过 React 挂载组件，脚本的执行时机与 DOM 就绪时间可能有差异
-    // 采用轮询机制，确保 DOM 完全就绪后再绑定事件，避免 getElementById 返回 null
-    const checkInterval = setInterval(function() {
-      if (initStarryConfession()) {
-        clearInterval(checkInterval);
-      }
-    }, 50);
-
-    // 设置一个超时兜底，如果 5 秒后还不行就放弃
-    setTimeout(function() {
-      clearInterval(checkInterval);
-    }, 5000);
+    })();
   </script>
 </body>
 </html>

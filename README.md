@@ -76,14 +76,11 @@
 所有模板代码必须通过这两项残酷测试才能放生生产环境：
 1. **iPhone 响应式大考**: 禁止通过定宽爆出行内横向滚动条，否则体验惨不忍睹。建议加上 `viewport-fit=cover` 用以适配刘海。
 2. **CDN 相对宇宙**: HTML 里的所有的 CSS 文件与 JS、图片调用，路径最开头千万不要带斜杠 `/`，或者填上任何固定的协议名。必须用**相对路径**（形如 `src="./style.css"` 或 `src="assets/bg.jpg"`），这决定着网页上天入地能否在任意子域名环境下自由生长存活。
-3. **JS 注入安全准则**: **绝对禁止** 在 `<script>` 标签内直接将 `{{变量}}` 放入引号中（如 `const val = "{{msg}}";`）。如果该变量包含换行符（如 `textarea` 类型），会导致 JS 语法错误（SyntaxError）从而使整个页面脚本失效。
-   - **正确做法**: 将变量放入隐藏的 HTML 标签中，再通过 DOM 读取其 `textContent`。
-     ```html
-     <!-- 推荐做法 -->
-     <div id="data_source" style="display:none">{{my_variable}}</div>
-     <script>
-       const rawData = document.getElementById('data_source').textContent;
-     </script>
+3. **JS 注入安全准则**: **绝对禁止** 在 `<script>` 标签内直接将 `{{变量}}` 放入单/双引号中（如 `const val = "{{msg}}";`）。如果该变量包含换行符（如 `textarea` 类型），会导致 JS 语法错误（SyntaxError）从而使整个页面脚本失效。
+   - **正确做法**: 使用 ES6 的**反引号 (Backticks)** 来包裹可能包含换行的变量。
+     ```javascript
+     // ✅ 推荐做法：完美支持多行文本注入
+     const rawData = `{{my_variable}}`;
      ```
 
 ---
