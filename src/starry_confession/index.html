@@ -626,6 +626,12 @@
     </div>
   </div>
 
+  <!-- 隐藏的数据注入区：避免直接在 JS 字符串中注入导致换行符引发的 SyntaxError -->
+  <div style="display:none" aria-hidden="true">
+    <div id="data_gallery_images">{{ modal_gallery_images }}</div>
+    <div id="data_star_density">{{ bg_star_density }}</div>
+  </div>
+
   <script>
     (function () {
       const root = document.documentElement;
@@ -782,8 +788,9 @@
 
       function buildPhotoGrid() {
         if (!photoGrid) return;
-        var raw = "{{ modal_gallery_images }}";
-        if (isUninjected(raw)) {
+        const dataEl = document.getElementById("data_gallery_images");
+        var raw = dataEl ? dataEl.textContent.trim() : "";
+        if (!raw || isUninjected(raw)) {
           raw = "https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg\nhttps://images.pexels.com/photos/1024992/pexels-photo-1024992.jpeg\nhttps://images.pexels.com/photos/556667/pexels-photo-556667.jpeg";
         }
         const urls = parseImages(raw);
@@ -803,8 +810,12 @@
       const ctx = canvas && canvas.getContext ? canvas.getContext("2d") : null;
       let stars = [];
       let last = 0;
-      let density = parseFloat("{{ bg_star_density }}");
-      if (!isFinite(density) || density <= 0) {
+      
+      const densityEl = document.getElementById("data_star_density");
+      let densityRaw = densityEl ? densityEl.textContent.trim() : "";
+      let density = parseFloat(densityRaw);
+
+      if (isNaN(density) || isUninjected(densityRaw)) {
         const preview = parseFloat(root.getAttribute("data_preview_star_density") || "");
         density = (isFinite(preview) && preview > 0) ? preview : 1.0;
       }
