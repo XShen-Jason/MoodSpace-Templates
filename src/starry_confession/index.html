@@ -642,7 +642,7 @@
       function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
       function isUninjected(s) {
-        return typeof s === "string" && /{{\s*[a-z_]+\s*}}/.test(s);
+        return typeof s === "string" && /\{\{\s*[a-z_]+\s*\}\}/.test(s);
       }
 
       function setTextById(id, value) {
