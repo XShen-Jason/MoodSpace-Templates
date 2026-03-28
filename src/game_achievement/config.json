@@ -1,11 +1,13 @@
 {
-  "name": "game_achievement_love_v2",
-  "title": "游戏成就恋爱簿-旗舰版",
+  "name": "game_achievement_love_v3",
+  "title": "游戏成就恋爱簿-至尊版",
   "fields": [
     { "id": "player_name", "label": "玩家名称", "default": "Player One", "type": "text" },
     { "id": "love_level", "label": "好感等级", "default": "Lv.99", "type": "text" },
     { "id": "love_days", "label": "恋爱天数", "default": "520 Days", "type": "text" },
     { "id": "main_btn_text", "label": "主按钮文字", "default": "解锁新回忆", "type": "text" },
+    { "id": "main_confession_title", "label": "主弹窗标题", "default": "❤️ 灵魂绑定契约 ❤️", "type": "text" },
+    { "id": "main_confession_msg", "label": "主表白情话", "default": "恭喜玩家 [Player One] 成功通关此阶段！\n\n在此刻，我将向你发出终极任务邀请：\n\n系统检测到我对你的心动值已溢出。此生此世，我的所有存档、装备、技能点和心跳频率，都将唯一授权给你使用。\n\n是否接受此灵魂绑定契约？", "type": "textarea" },
     { "id": "system_msg", "label": "系统框消息", "default": "> 点击成就方格，查看回忆细节。", "type": "text" },
     { "id": "ac_1_title", "label": "成就1-标题", "default": "新手村相遇", "type": "text" },
     { "id": "ac_1_icon", "label": "成就1-图标(Emoji)", "default": "🌱", "type": "text" },

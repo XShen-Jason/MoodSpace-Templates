@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LOVE RPG ADVANCED</title>
+    <title>LOVE RPG SUPREME</title>
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -67,7 +67,7 @@
 
         .sys-msg-box::after { content: "▼"; position: absolute; bottom: 5px; right: 10px; opacity: 0.5; animation: blink 1s infinite; }
 
-        /* 底部主按钮 (原按钮样式回退) */
+        /* 底部主按钮 (npm run upload 样式回退) */
         .pixel-btn-container {
             padding: 0 20px 20px;
         }
@@ -84,7 +84,7 @@
 
         .main-pixel-btn:active { transform: translateY(5px); box-shadow: none; }
 
-        /* 弹窗样式 */
+        /* 通用像素弹窗样式 */
         .pixel-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center;
@@ -99,18 +99,31 @@
 
         .modal-title { font-size: 1.3rem; color: var(--pixel-orange); margin-bottom: 15px; border-bottom: 2px solid #ddd; padding-bottom: 5px; text-align: center;}
 
+        /* 成就弹窗：照片容器 */
         .modal-image-container { width: 100%; aspect-ratio: 4/3; background: #eee; border: 2px solid #000; margin-bottom: 15px; overflow: hidden; }
-
         .modal-image { width: 100%; height: 100%; object-fit: cover; }
 
-        .modal-body { font-size: 0.9rem; line-height: 1.6; color: #333; margin-bottom: 20px; text-align: left;}
+        /* 主告白弹窗：特别纹理 */
+        .confession-content {
+            background: url('https://www.transparenttextures.com/patterns/p6.png'), #fff;
+            border: 4px solid var(--pixel-black);
+            box-shadow: 10px 10px 0 rgba(251, 146, 60, 0.3);
+            width: 100%; max-width: 420px; padding: 30px; position: relative;
+            animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .confession-title {
+            font-size: 1.6rem; color: #fff; background: var(--pixel-black); padding: 5px 10px; margin-bottom: 25px; text-align: center;
+        }
+
+        .modal-body { font-size: 0.9rem; line-height: 1.6; color: #333; margin-bottom: 20px; text-align: left; white-space: pre-line; }
 
         .close-btn { 
             width: 100%; padding: 10px; background: var(--pixel-black); color: white; 
             border: none; cursor: pointer; font-family: inherit; font-size: 1rem;
         }
 
-        /* 粒子和超级特效 */
+        /* 超大心形全屏效果 */
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
         @keyframes heartFly {
@@ -157,7 +170,7 @@
         </div>
 
         <div class="pixel-btn-container">
-            <button class="main-pixel-btn" onclick="startSuperEffect()">{{ main_btn_text }}</button>
+            <button class="main-pixel-btn" onclick="startSuperConfession()">{{ main_btn_text }}</button>
         </div>
     </div>
 
@@ -172,42 +185,54 @@
         </div>
     </div>
 
+    <div id="mainConfessionModal" class="pixel-modal">
+        <div class="confession-content">
+            <div class="confession-title">{{ main_confession_title }}</div>
+            <div class="modal-body">
+                {{ main_confession_msg }}
+            </div>
+            <button class="close-btn" onclick="closeConfessionModal()">确认绑定契约</button>
+        </div>
+    </div>
+
     <script>
         function openModal(title, msg, imgUrl) {
             document.getElementById('mTitle').innerText = title;
             document.getElementById('mBody').innerText = msg;
-            // 处理默认图片：如果没填，显示占位符
             const finalImg = imgUrl && imgUrl.startsWith('http') ? imgUrl : 'https://via.placeholder.com/400x300.png?text=Pixel+Memory';
             document.getElementById('mImg').src = finalImg;
             document.getElementById('pixelModal').style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('pixelModal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('pixelModal').style.display = 'none'; }
 
-        function closeModalOnBg(e) {
-            if(e.target.className === 'pixel-modal') closeModal();
-        }
+        // 关闭主表白弹窗
+        function closeConfessionModal() { document.getElementById('mainConfessionModal').style.display = 'none'; }
 
-        // 超级全屏心形效果
-        function startSuperEffect() {
-            // 生成超大心形
+        // 点击背景关闭通用弹窗
+        function closeModalOnBg(e) { if(e.target.className === 'pixel-modal') closeModal(); }
+
+        // 点击主按钮：触发全屏特效 + 打开告白弹窗
+        function startSuperConfession() {
+            // 1. 全屏特效
             const heart = document.createElement('div');
             heart.className = 'super-heart';
             heart.innerText = '❤️';
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 2500);
 
-            // 同时在屏幕四角产生像素爆炸
             for(let i=0; i<4; i++) {
                 createExplosion(
                     [10, window.innerWidth-10, window.innerWidth-10, 10][i],
                     [10, 10, window.innerHeight-10, window.innerHeight-10][i]
                 );
             }
-            // 手机震动
             if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 300]);
+
+            // 2. 0.5 秒后打开告白大弹窗 (留一点特效展示时间)
+            setTimeout(() => {
+                document.getElementById('mainConfessionModal').style.display = 'flex';
+            }, 500);
         }
 
         function createExplosion(x, y) {
