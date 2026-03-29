@@ -26,8 +26,8 @@ function validate(tmplName, tmplDir) {
 
     const resolvedPath = path.resolve(tmplDir);
     if (!fs.existsSync(resolvedPath)) {
-        errors.push(`目录不存在: ${tmplDir}`);
-        return errors;
+        console.log(`ℹ️  Skipping validation: Directory [${tmplDir}] not found. (Assuming template was deleted)`);
+        return errors; // No errors
     }
 
     // 2. Required Files Check

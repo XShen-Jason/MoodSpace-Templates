@@ -33,11 +33,11 @@ jobs:
         run: |
           # Get all template names that had any file change in src/
           # This includes Added (A), Modified (M), Renamed (R), and Deleted (D)
-          CHANGED=$(git diff --name-only HEAD~1 HEAD -- src/ | grep '^src/' | cut -d'/' -f2 | sort -u)
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- src/ | grep '^src/' | cut -d'/' -f2 | sort -u || true)
           echo "Templates with changes: $CHANGED"
           
           # Convert to comma-separated for GH output
-          TEMPLATES=$(echo "$CHANGED" | tr '\n' ',' | sed 's/,$//')
+          TEMPLATES=$(echo "$CHANGED" | tr '\n' ',' | sed 's/,$//' || true)
           echo "templates=$TEMPLATES" >> "$GITHUB_OUTPUT"
 
       - name: Process each changed template (Upload or Delete)

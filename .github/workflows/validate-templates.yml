@@ -28,9 +28,9 @@ jobs:
         id: changed
         run: |
           # Find directories in src/ that have changes in this PR
-          CHANGED=$(git diff --name-only origin/main HEAD -- src/ | grep '^src/' | cut -d'/' -f2 | sort -u)
+          CHANGED=$(git diff --name-only origin/main HEAD -- src/ | grep '^src/' | cut -d'/' -f2 | sort -u || true)
           echo "Templates changed in PR: $CHANGED"
-          TEMPLATES=$(echo "$CHANGED" | tr '\n' ',' | sed 's/,$//')
+          TEMPLATES=$(echo "$CHANGED" | tr '\n' ',' | sed 's/,$//' || true)
           echo "templates=$TEMPLATES" >> "$GITHUB_OUTPUT"
 
       - name: Run Validation Script
