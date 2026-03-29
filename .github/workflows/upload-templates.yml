@@ -31,24 +31,16 @@ jobs:
       - name: Detect changed template directories
         id: changed
         run: |
-          # Get files changed vs the previous commit
+          # Get all template names that had any file change in src/
+          # This includes Added (A), Modified (M), Renamed (R), and Deleted (D)
           CHANGED=$(git diff --name-only HEAD~1 HEAD -- src/ | grep '^src/' | cut -d'/' -f2 | sort -u)
-          echo "Templates changed: $CHANGED"
-          # Convert to comma-separated for output
+          echo "Templates with changes: $CHANGED"
+          
+          # Convert to comma-separated for GH output
           TEMPLATES=$(echo "$CHANGED" | tr '\n' ',' | sed 's/,$//')
           echo "templates=$TEMPLATES" >> "$GITHUB_OUTPUT"
 
-      - name: Validate changed templates
-        if: steps.changed.outputs.templates != ''
-        run: |
-          IFS=',' read -ra TMPL_LIST <<< "${{ steps.changed.outputs.templates }}"
-          for tmpl in "${TMPL_LIST[@]}"; do
-            tmpl=$(echo "$tmpl" | xargs)
-            DIR="src/$tmpl"
-            node scripts/validate-template.js "$tmpl" "$DIR"
-          done
-
-      - name: Upload each changed template
+      - name: Process each changed template (Upload or Delete)
         if: steps.changed.outputs.templates != ''
         env:
           RS_ADMIN_KEY: ${{ secrets.RS_ADMIN_KEY }}
@@ -56,12 +48,16 @@ jobs:
         run: |
           IFS=',' read -ra TMPL_LIST <<< "${{ steps.changed.outputs.templates }}"
           for tmpl in "${TMPL_LIST[@]}"; do
-            tmpl=$(echo "$tmpl" | xargs)   # trim whitespace
+            tmpl=$(echo "$tmpl" | xargs)   # remove accidental whitespace
             DIR="src/$tmpl"
+            
             if [ -d "$DIR" ] && [ -f "$DIR/index.html" ]; then
-              echo "⬆️  Uploading template: $tmpl (dir: $DIR)"
+              echo "⬆️  Uploading template: $tmpl"
               node -r dotenv/config scripts/upload-template.js "$tmpl" "$DIR"
+            elif [ ! -d "$DIR" ]; then
+              echo "🗑️  Template directory missing. Requesting deletion: $tmpl"
+              node -r dotenv/config scripts/delete-template.js "$tmpl"
             else
-              echo "⚠️  Skipping '$tmpl': not a valid template dir (missing index.html)"
+              echo "⚠️  Skipping '$tmpl': does not look like a valid template (missing index.html or not a dir)"
             fi
           done

@@ -40,6 +40,10 @@ jobs:
           for tmpl in "${TMPL_LIST[@]}"; do
             tmpl=$(echo "$tmpl" | xargs)
             DIR="src/$tmpl"
-            echo "🔎 Validating: $tmpl"
-            node scripts/validate-template.js "$tmpl" "$DIR"
+            if [ -d "$DIR" ]; then
+              echo "🔎 Validating: $tmpl"
+              node scripts/validate-template.js "$tmpl" "$DIR"
+            else
+              echo "ℹ️  Skipping validation for deleted template: $tmpl"
+            fi
           done
