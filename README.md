@@ -13,7 +13,7 @@ src/
 └── your_template_name/
     ├── index.html      ← 必须。模板主体，含 {{ 变量 }} 占位符
     ├── config.json     ← 必须。配置文件，定义字段与元数据
-    └── preview.jpg     ← 推荐。500KB 以内的封面图
+    └── preview.jpg     ← 极力推荐。建议 1280x720 (16:9)，用于生成高保真分享海报
 ```
 
 ### 文件夹命名铁律
@@ -36,7 +36,7 @@ src/
 | :--- | :---: | :--- | :--- |
 | `name` | ✅ | — | 技术标识名，**必须与文件夹名完全一致** |
 | `title` | ✅ | — | 界面展示名称，支持中文，显示于模板大厅 |
-| `tier` | ❌ | `"free"` | 权限分级：`"free"` 开放 / `"pro"` 仅高级会员 |
+| `tier` | ❌ | `"free"` | 权限分级：`"free"` 体验 / `"pro"` 高级 / `"pro+"` 旗舰 / `"partner"` 合伙人 |
 | `scene` | ✅ | — | 场景 ID，必须是预设的 8 种之一 (见 2.2) |
 | `categories` | ✅ | — | 情绪分类数组，包含 1 个或多个情绪 ID (见 2.3) |
 | `price` | ❌ | `0` | 单独买断价格（单位：元），保留字段 |
@@ -125,10 +125,8 @@ src/
 ```html
 <script>
   (function () {
-    // 判断某个值是否仍是未替换的占位符
-    function isUninjected(s) {
       // ✅ 必须用 \{ \} 转义花括号！否则在 Preview 环境正则解析会报 SyntaxError
-      return typeof s === "string" && /\{\{\s*[a-z_]+\s*\}\}/.test(s);
+      return typeof s === "string" && /\{\{\s*[a-z0-9_]+\s*\}\}/.test(s);
     }
 
     // 检查页面是否已被平台注入数据
@@ -184,7 +182,7 @@ if (!images || isUninjected(images)) {
 /{{\\s*[a-z_]+\\s*}}/.test(s)
 
 // ✅ 正确：转义花括号，所有环境下均安全
-/\{\{\s*[a-z_]+\s*\}\}/.test(s)
+/\{\{\s*[a-z0-9_]+\s*\}\}/.test(s)
 ```
 
 ### 3.4 资源路径规范
