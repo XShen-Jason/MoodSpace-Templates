@@ -1,6 +1,6 @@
 {
-  "name": "film_memory_wall",
-  "title": "胶片回忆墙",
+  "name": "film_memory_wall_v2",
+  "title": "胶片回忆墙-旗舰版",
   "scene": "self_record",
   "categories": [
     "sadness",
@@ -20,14 +20,44 @@
       "type": "text"
     },
     {
-      "id": "memory_date",
-      "label": "纪念日期",
+      "id": "memory_date_1",
+      "label": "胶片1-日期",
       "default": "2024.05.20",
       "type": "text"
     },
     {
+      "id": "img_1",
+      "label": "胶片1-照片URL",
+      "default": "https://images.unsplash.com/photo-1516483642775-8208316f2129?w=600",
+      "type": "text"
+    },
+    {
+      "id": "cap_1",
+      "label": "胶片1-描述文案",
+      "default": "我们在地图上标注的第一个坐标。",
+      "type": "text"
+    },
+    {
+      "id": "memory_date_2",
+      "label": "胶片2-日期/编号",
+      "default": "REC · 02",
+      "type": "text"
+    },
+    {
+      "id": "img_2",
+      "label": "胶片2-照片URL",
+      "default": "https://images.unsplash.com/photo-1493134795711-403d9822eb3b?w=600",
+      "type": "text"
+    },
+    {
+      "id": "cap_2",
+      "label": "胶片2-描述文案",
+      "default": "把阳光和你的笑声一并洗进底片里。",
+      "type": "text"
+    },
+    {
       "id": "story_text",
-      "label": "核心回忆文案",
+      "label": "底部核心回忆文案",
       "default": "每一张底片，都是我爱你的证据。那些在地图上走过的足迹，终将汇聚成永恒的清新蓝绿。",
       "type": "textarea"
     }
