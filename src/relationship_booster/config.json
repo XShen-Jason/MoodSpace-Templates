@@ -1,6 +1,11 @@
 {
   "name": "relationship_booster",
   "title": "人际关系升温卡",
+  "scene": "duo_space",
+  "categories": [
+    "love",
+    "joy"
+  ],
   "version": "1.0.0",
   "static": false,
   "description": "加深彼此感情，记录美好回忆",

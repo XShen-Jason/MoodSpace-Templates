@@ -1,6 +1,11 @@
 {
   "name": "film_memory_wall",
   "title": "胶片回忆墙",
+  "scene": "self_record",
+  "categories": [
+    "sadness",
+    "joy"
+  ],
   "fields": [
     {
       "id": "main_title",

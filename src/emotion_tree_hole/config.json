@@ -1,6 +1,11 @@
 {
   "name": "emotion_tree_hole",
   "title": "情绪树洞与自我对话",
+  "scene": "self_heal",
+  "categories": [
+    "stress",
+    "sadness"
+  ],
   "version": "1.0.0",
   "static": false,
   "description": "记录心情，与自己深度对话",

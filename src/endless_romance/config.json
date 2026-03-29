@@ -1,6 +1,10 @@
 {
   "name": "romance_space_glass_premium",
   "title": "永恒浪漫",
+  "scene": "send_to_them",
+  "categories": [
+    "love"
+  ],
   "fields": [
     {
       "id": "title",

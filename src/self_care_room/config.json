@@ -1,6 +1,11 @@
 {
   "name": "self_care_room",
   "title": "自我关怀疗愈室",
+  "scene": "self_heal",
+  "categories": [
+    "calm",
+    "stress"
+  ],
   "version": "1.0.0",
   "static": false,
   "description": "放松身心，给自己一个温暖的拥抱",

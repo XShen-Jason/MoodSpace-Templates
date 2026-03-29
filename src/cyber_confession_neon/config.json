@@ -1,6 +1,10 @@
 {
   "name": "cyber_love_neon",
   "title": "赛博告白霓虹",
+  "scene": "send_to_them",
+  "categories": [
+    "love"
+  ],
   "fields": [
     {
       "id": "cyber_title",

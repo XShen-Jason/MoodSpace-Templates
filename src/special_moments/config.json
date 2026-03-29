@@ -1,6 +1,11 @@
 {
   "name": "special_moments",
   "title": "特殊时刻纪念册",
+  "scene": "share",
+  "categories": [
+    "joy",
+    "love"
+  ],
   "version": "1.0.0",
   "static": false,
   "description": "记录生命中每一个值得纪念的时刻",

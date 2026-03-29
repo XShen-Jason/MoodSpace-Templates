@@ -1,6 +1,11 @@
 {
   "name": "daily_encouragement",
   "title": "日常鼓励充电站",
+  "scene": "send_to_them",
+  "categories": [
+    "calm",
+    "joy"
+  ],
   "version": "1.0.0",
   "static": false,
   "description": "每天给自己一点鼓励和正能量",

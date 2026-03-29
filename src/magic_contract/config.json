@@ -1,6 +1,10 @@
 {
   "name": "magic_contract_scroll",
   "title": "魔法契约书",
+  "scene": "celebrate",
+  "categories": [
+    "love"
+  ],
   "fields": [
     {
       "id": "magic_title",

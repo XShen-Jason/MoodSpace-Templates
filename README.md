@@ -37,6 +37,8 @@ src/
 | `name` | ✅ | — | 技术标识名，**必须与文件夹名完全一致** |
 | `title` | ✅ | — | 界面展示名称，支持中文，显示于模板大厅 |
 | `tier` | ❌ | `"free"` | 权限分级：`"free"` 开放 / `"pro"` 仅高级会员 |
+| `scene` | ✅ | — | 场景 ID，必须是预设的 8 种之一 (见 2.2) |
+| `categories` | ✅ | — | 情绪分类数组，包含 1 个或多个情绪 ID (见 2.3) |
 | `price` | ❌ | `0` | 单独买断价格（单位：元），保留字段 |
 | `status` | ❌ | `"active"` | `"active"` 正常展示 / `"offline"` 下架隐藏 |
 | `static` | ❌ | `false` | `true` 表示固定模板，无用户可编辑字段 |
@@ -54,6 +56,27 @@ src/
 | `default` | ❌ | `""` | 字段默认值，用于 Builder 的实时预览初始化 |
 | `placeholder` | ❌ | — | 输入框占位提示文字 |
 
+### 2.2 `scene` 场景枚举值
+必须从以下 8 个 ID 中选择其一：
+- `send_to_them`: 发送给TA
+- `self_record`: 记录自我
+- `celebrate`: 庆祝 / 纪念
+- `repair`: 沟通 / 修复
+- `share`: 分享 / 展示
+- `self_heal`: 自我疗愈
+- `duo_space`: 双人空间
+- `explore`: 探索模式
+
+### 2.3 `categories` 情绪分类枚举值
+必须包含以下 1 个或多个 ID：
+- `love`: 爱 / 想念
+- `joy`: 开心 / 喜悦
+- `guilt`: 愧疚 / 道歉
+- `sadness`: 伤感 / 回忆
+- `stress`: 压力 / 焦虑
+- `calm`: 平静 / 感谢
+- `neutral`: 探索 / 空白
+
 **完整示例：**
 
 ```json
@@ -63,6 +86,8 @@ src/
   "version": "1.0.0",
   "status": "active",
   "tier": "free",
+  "scene": "send_to_them",
+  "categories": ["love"],
   "static": false,
   "fields": [
     { "id": "headline", "label": "主标题", "default": "星空告白", "type": "text" },

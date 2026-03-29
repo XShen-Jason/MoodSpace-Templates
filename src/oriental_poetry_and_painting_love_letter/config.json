@@ -1,6 +1,11 @@
 {
   "name": "oriental_poetry_letter",
   "title": "东方诗画情书",
+  "scene": "send_to_them",
+  "categories": [
+    "love",
+    "calm"
+  ],
   "fields": [
     {
       "id": "scroll_title",
