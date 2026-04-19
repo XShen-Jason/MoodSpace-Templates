@@ -1,82 +1,17 @@
 {
   "name": "romance_space_glass_premium",
-  "title": "永恒浪漫",
-  "scene": "send_to_them",
-  "categories": [
-    "love"
-  ],
+  "title": "永恒浪漫-极致毛玻璃版",
   "fields": [
-    {
-      "id": "title",
-      "label": "主标题 / 仪式名",
-      "default": "Our Endless Romance",
-      "type": "text"
-    },
-    {
-      "id": "subtitle",
-      "label": "副标题 / 情感宣言",
-      "default": "在这颗温柔星球上，我们把每一次心跳都存档。",
-      "type": "textarea"
-    },
-    {
-      "id": "couple_names",
-      "label": "情侣称呼（如：Alex & Iris）",
-      "default": "You & Me",
-      "type": "text"
-    },
-    {
-      "id": "date",
-      "label": "重要日期",
-      "default": "2026 · 05 · 20",
-      "type": "text"
-    },
-    {
-      "id": "location",
-      "label": "地点 / 坐标",
-      "default": "Somewhere only we know",
-      "type": "text"
-    },
-    {
-      "id": "story",
-      "label": "我们的故事正文",
-      "default": "那天晚上的风很轻，你站在光里，也走进了我的心里。\n从那之后，日落变得柔软，星星都有了名字。",
-      "type": "textarea"
-    },
-    {
-      "id": "bg_image_url",
-      "label": "背景大图 URL",
-      "default": "https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg",
-      "type": "text"
-    },
-    {
-      "id": "main_color",
-      "label": "主色（HEX）",
-      "default": "#FF9A9E",
-      "type": "text"
-    },
-    {
-      "id": "secondary_color",
-      "label": "辅色（HEX）",
-      "default": "#FAD0C4",
-      "type": "text"
-    },
-    {
-      "id": "music_url",
-      "label": "背景音乐 URL（可为空）",
-      "default": "",
-      "type": "text"
-    },
-    {
-      "id": "button_text",
-      "label": "主按钮文案",
-      "default": "轻轻落入这段故事",
-      "type": "text"
-    },
-    {
-      "id": "gallery_images",
-      "label": "图库图片 URL 列表（用换行或逗号分隔）",
-      "default": "https://images.pexels.com/photos/556667/pexels-photo-556667.jpeg\nhttps://images.pexels.com/photos/1024992/pexels-photo-1024992.jpeg\nhttps://images.pexels.com/photos/3656339/pexels-photo-3656339.jpeg",
-      "type": "textarea"
-    }
+    { "id": "title", "label": "浪漫仪式标题", "type": "text", "default": "Our Endless Romance" },
+    { "id": "subtitle", "label": "一句话情感宣言", "type": "textarea", "default": "在这颗温柔星球上，我们把每一次心跳都存档。" },
+    { "id": "couple_names", "label": "你们的称呼", "type": "text", "default": "You & Me" },
+    { "id": "date", "label": "重要纪念日", "type": "text", "default": "2026 · 05 · 20" },
+    { "id": "location", "label": "相遇/约定地点", "type": "text", "default": "Somewhere only we know" },
+    { "id": "story", "label": "关于我们的完整故事", "type": "textarea", "default": "那天晚上的风很轻，你站在光里，也走进了我的心里。\n从那之后，日落变得柔软，星星都有了名字。" },
+    { "id": "bg_image_url", "label": "全屏背景图", "type": "text", "default": "https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg" },
+    { "id": "color_primary", "label": "主题强调色", "type": "color", "default": "#FF9A9E" },
+    { "id": "color_accent", "label": "装饰点缀色", "type": "color", "default": "#FAD0C4" },
+    { "id": "button_text", "label": "互动按钮文案", "type": "text", "default": "轻轻落入这段故事" },
+    { "id": "gallery_images", "label": "回忆相册列表（每行一个图片链接）", "type": "textarea", "default": "https://images.pexels.com/photos/556667/pexels-photo-556667.jpeg\nhttps://images.pexels.com/photos/1024992/pexels-photo-1024992.jpeg\nhttps://images.pexels.com/photos/3656339/pexels-photo-3656339.jpeg" }
   ]
 }
