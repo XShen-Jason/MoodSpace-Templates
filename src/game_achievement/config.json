@@ -33,7 +33,7 @@
     {
       "id": "main_confession_title",
       "label": "主弹窗标题",
-      "default": "❤️ 灵魂绑定契约 ❤️",
+      "default": "❤️ 爱情游戏邀约❤️",
       "type": "text"
     },
     {
