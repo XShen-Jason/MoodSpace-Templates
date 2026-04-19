@@ -2,147 +2,35 @@
   "name": "game_achievement_love_v3",
   "title": "游戏成就恋爱簿-至尊版",
   "scene": "share",
-  "categories": [
-    "joy"
-  ],
+  "categories": ["joy"],
   "fields": [
+    { "id": "player_name", "label": "玩家名称", "default": "Player One", "type": "text" },
+    { "id": "love_level", "label": "好感等级", "default": "Lv.99", "type": "text" },
+    { "id": "love_days", "label": "恋爱天数", "default": "520 Days", "type": "text" },
+    { "id": "main_btn_text", "label": "主按钮文字", "default": "解锁新回忆", "type": "text" },
+    { "id": "main_confession_title", "label": "主弹窗标题", "default": "❤️ 爱情游戏邀约❤️", "type": "text" },
     {
-      "id": "player_name",
-      "label": "玩家名称",
-      "default": "Player One",
-      "type": "text"
-    },
-    {
-      "id": "love_level",
-      "label": "好感等级",
-      "default": "Lv.99",
-      "type": "text"
-    },
-    {
-      "id": "love_days",
-      "label": "恋爱天数",
-      "default": "520 Days",
-      "type": "text"
-    },
-    {
-      "id": "main_btn_text",
-      "label": "主按钮文字",
-      "default": "解锁新回忆",
-      "type": "text"
-    },
-    {
-      "id": "main_confession_title",
-      "label": "主弹窗标题",
-      "default": "❤️ 爱情游戏邀约❤️",
-      "type": "text"
-    },
-    {
-     "id": "main_confession_msg",
-     "label": "主表白情话",
-     "default": "致我的 [二号玩家]：\n\n这世界是一个巨大的开放地图，我曾独自跑图，直到在某个坐标遇见了你。在那一刻，所有的支线任务都失去了意义，因为你才是我的主线关卡。\n\n我不擅长通关，但我擅长和你一起面对所有的 BOSS。我想邀请你加入我的余生副本，共享所有的掉落奖励，平分每一次落日余晖。\n\n那么，你愿意按下那个“确认连接”的按钮，和我开启 2P 模式吗？",
-     "type": "textarea"
-    },
-    {
-      "id": "system_msg",
-      "label": "系统框消息",
-      "default": "> 点击成就方格，查看回忆细节。",
-      "type": "text"
-    },
-    {
-      "id": "ac_1_title",
-      "label": "成就1-标题",
-      "default": "新手村相遇",
-      "type": "text"
-    },
-    {
-      "id": "ac_1_icon",
-      "label": "成就1-图标(Emoji)",
-      "default": "🌱",
-      "type": "text"
-    },
-    {
-      "id": "ac_1_msg",
-      "label": "成就1-弹窗情话",
-      "default": "那是我们故事的开始。",
+      "id": "main_confession_msg",
+      "label": "主表白情话",
+      "default": "致我的 [二号玩家]：\n\n这世界是一个巨大的开放地图，我曾独自跑图，直到在某个坐标遇见了你。在那一刻，所有的支线任务都失去了意义，因为你才是我的主线关卡。\n\n我不擅长通关，但我擅长和你一起面对所有的 BOSS。我想邀请你加入我的余生副本，共享所有的掉落奖励，平分每一次落日余晖。\n\n那么，你愿意按下那个“确认连接”的按钮，和我开启 2P 模式吗？",
       "type": "textarea"
     },
-    {
-      "id": "ac_1_img",
-      "label": "成就1-弹窗照片URL",
-      "default": "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=400",
-      "type": "text"
-    },
-    {
-      "id": "ac_2_title",
-      "label": "成就2-标题",
-      "default": "好感度突破",
-      "type": "text"
-    },
-    {
-      "id": "ac_2_icon",
-      "label": "成就2-图标(Emoji)",
-      "default": "❤️",
-      "type": "text"
-    },
-    {
-      "id": "ac_2_msg",
-      "label": "成就2-弹窗情话",
-      "default": "心动值已溢出。",
-      "type": "textarea"
-    },
-    {
-      "id": "ac_2_img",
-      "label": "成就2-弹窗照片URL",
-      "default": "https://images.unsplash.com/photo-1581022295221-4fbd2669729a?w=400",
-      "type": "text"
-    },
-    {
-      "id": "ac_3_title",
-      "label": "成就3-标题",
-      "default": "共同旅行",
-      "type": "text"
-    },
-    {
-      "id": "ac_3_icon",
-      "label": "成就3-图标(Emoji)",
-      "default": "✈️",
-      "type": "text"
-    },
-    {
-      "id": "ac_3_msg",
-      "label": "成就3-弹窗情话",
-      "default": "走遍世界只为遇见你。",
-      "type": "textarea"
-    },
-    {
-      "id": "ac_3_img",
-      "label": "成就3-弹窗照片URL",
-      "default": "https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=400",
-      "type": "text"
-    },
-    {
-      "id": "ac_4_title",
-      "label": "成就4-标题",
-      "default": "终极誓言",
-      "type": "text"
-    },
-    {
-      "id": "ac_4_icon",
-      "label": "成就4-图标(Emoji)",
-      "default": "💍",
-      "type": "text"
-    },
-    {
-      "id": "ac_4_msg",
-      "label": "成就4-弹窗情话",
-      "default": "灵魂已存档，不离不弃。",
-      "type": "textarea"
-    },
-    {
-      "id": "ac_4_img",
-      "label": "成就4-弹窗照片URL",
-      "default": "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400",
-      "type": "text"
-    }
+    { "id": "system_msg", "label": "系统框消息", "default": "> 点击成就方格，查看回忆细节。", "type": "text" },
+    { "id": "ac_1_title", "label": "成就1-标题", "default": "新手村相遇", "type": "text" },
+    { "id": "ac_1_icon", "label": "成就1-图标", "default": "🌱", "type": "text" },
+    { "id": "ac_1_msg", "label": "成就1-内容", "default": "那是我们故事的开始。", "type": "textarea" },
+    { "id": "ac_1_img", "label": "成就1-照片", "default": "placeholder.png", "type": "text" },
+    { "id": "ac_2_title", "label": "成就2-标题", "default": "好感度突破", "type": "text" },
+    { "id": "ac_2_icon", "label": "成就2-图标", "default": "❤️", "type": "text" },
+    { "id": "ac_2_msg", "label": "成就2-内容", "default": "心动值已溢出。", "type": "textarea" },
+    { "id": "ac_2_img", "label": "成就2-照片", "default": "placeholder.png", "type": "text" },
+    { "id": "ac_3_title", "label": "成就3-标题", "default": "共同旅行", "type": "text" },
+    { "id": "ac_3_icon", "label": "成就3-图标", "default": "✈️", "type": "text" },
+    { "id": "ac_3_msg", "label": "成就3-内容", "default": "走遍世界只为遇见你。", "type": "textarea" },
+    { "id": "ac_3_img", "label": "成就3-照片", "default": "placeholder.png", "type": "text" },
+    { "id": "ac_4_title", "label": "成就4-标题", "default": "终极誓言", "type": "text" },
+    { "id": "ac_4_icon", "label": "成就4-图标", "default": "💍", "type": "text" },
+    { "id": "ac_4_msg", "label": "成就4-内容", "default": "灵魂已存档，不离不弃。", "type": "textarea" },
+    { "id": "ac_4_img", "label": "成就4-照片", "default": "placeholder.png", "type": "text" }
   ]
 }
