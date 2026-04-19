@@ -1,17 +1,19 @@
 {
   "name": "film_memory_wall_v2",
-  "title": "胶片回忆墙-沉浸弹窗版",
+  "title": "胶片回忆墙-故事长文版",
   "fields": [
-    { "id": "main_title", "label": "顶部大标题", "type": "text", "default": "我们的胶片日记" },
-    { "id": "subtitle", "label": "副标题文案", "type": "text", "default": "把我们的故事，一卷一卷洗进时光里。" },
+    { "id": "main_title", "label": "页面大标题", "type": "text", "default": "我们的胶片日记" },
+    { "id": "subtitle", "label": "副标题文案", "type": "text", "default": "把故事洗进底片，让瞬间成为永恒。" },
     { "id": "color_primary", "label": "主题强调色", "type": "color", "default": "#8b261e" },
-    { "id": "color_bg", "label": "背景底色", "type": "color", "default": "#1a0f0a" },
-    { "id": "memory_date_1", "label": "胶片1-日期", "type": "text", "default": "2024.05.20" },
+    
     { "id": "img_1", "label": "胶片1-照片URL", "type": "text", "default": "https://images.unsplash.com/photo-1516483642775-8208316f2129?w=800" },
-    { "id": "cap_1", "label": "胶片1-描述文案", "type": "textarea", "default": "我们在地图上标注的第一个坐标，那天风很甜。" },
-    { "id": "memory_date_2", "label": "胶片2-日期/编号", "type": "text", "default": "REC · 02" },
+    { "id": "date_1", "label": "胶片1-底部简短标签", "type": "text", "default": "2024.05.20 / 初见" },
+    { "id": "story_1", "label": "胶片1-点击弹出的长故事", "type": "textarea", "default": "这是我们第一次一起旅行。那天天气并没有预报说的那么晴朗，但在那个转角看到这片景色时，你回头对我笑的样子，比任何阳光都要灿烂。我用这卷胶片记录下了那一刻，也记录下了心动的声音。" },
+
     { "id": "img_2", "label": "胶片2-照片URL", "type": "text", "default": "https://images.unsplash.com/photo-1493134795711-403d9822eb3b?w=800" },
-    { "id": "cap_2", "label": "胶片2-描述文案", "type": "textarea", "default": "把阳光和你的笑声一并洗进底片里，永不褪色。" },
-    { "id": "story_text", "label": "底部核心回忆文案", "type": "textarea", "default": "每一张底片，都是我爱你的证据。\n那些走过的足迹，终将汇聚成永恒的记忆。" }
+    { "id": "date_2", "label": "胶片2-底部简短标签", "type": "text", "default": "REC · 02 / 巷弄" },
+    { "id": "story_2", "label": "胶片2-点击弹出的长故事", "type": "textarea", "default": "午后的旧巷弄里静悄悄的，只有风吹过树叶的沙沙声。我们漫无目的地走着，谈论着关于未来的那些遥远又清晰的梦想。胶片相机特有的颗粒感，正如那天空气中漂浮的细微尘埃，温暖而真实。" },
+
+    { "id": "footer_text", "label": "底部寄语", "type": "textarea", "default": "那些在地图上走过的足迹，终将汇聚成永恒的记忆。" }
   ]
 }

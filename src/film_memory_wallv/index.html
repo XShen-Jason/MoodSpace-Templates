@@ -7,97 +7,103 @@
     <style>
         :root {
             --ms-primary: {{color_primary}};
-            --ms-bg: {{color_bg}};
             --cream-yellow: #fdf5e6;
-            --glass-white: rgba(255, 255, 255, 0.1);
-            --film-shadow: 0 15px 45px rgba(0,0,0,0.6);
+            --dark-bg: #1a0f0a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background: radial-gradient(circle at center, #2c1e16 0%, var(--ms-bg) 100%);
-            background-attachment: fixed;
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at center, #2c1e16 0%, var(--dark-bg) 100%);
             font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
             color: var(--cream-yellow);
             line-height: 1.6;
-            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* 复古纸张纹理 */
+        /* 复古纸张纹理叠加 */
         body::after {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://www.transparenttextures.com/patterns/p6.png');
-            opacity: 0.15; pointer-events: none; z-index: 1;
+            opacity: 0.12; pointer-events: none; z-index: 1;
         }
 
-        .container { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 60px 20px; text-align: center; }
+        .container { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; padding: 50px 20px; text-align: center; }
 
-        header { margin-bottom: 60px; animation: fadeIn 1s ease; }
-        h1 { font-size: 2.2rem; letter-spacing: 4px; color: var(--ms-primary); text-shadow: 1px 1px 0px var(--cream-yellow); margin-bottom: 12px; }
-        .subtitle { font-size: 0.9rem; opacity: 0.7; font-weight: 300; letter-spacing: 1px; }
+        header { margin-bottom: 50px; animation: fadeIn 1s ease; }
+        h1 { font-size: 2.4rem; letter-spacing: 5px; color: var(--ms-primary); text-shadow: 1px 1px 0px var(--cream-yellow); margin-bottom: 10px; }
+        .subtitle { font-size: 0.9rem; opacity: 0.7; font-weight: 300; }
 
-        /* 胶片网格 */
-        .film-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 60px; }
+        /* 胶片展示区 */
+        .film-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; margin-bottom: 60px; }
 
         .film-card {
             background: #fff; padding: 12px 12px 35px 12px;
-            box-shadow: var(--film-shadow);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             transform: rotate(var(--r, 2deg));
-            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            cursor: zoom-in;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer; position: relative;
         }
         .film-card:nth-child(even) { --r: -2deg; }
-        .film-card:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+        .film-card:hover { transform: scale(1.05) rotate(0deg); z-index: 10; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
 
-        /* 胶片孔位 */
+        /* 胶片边缘效果 */
         .film-card::before {
-            content: "············"; position: absolute; top: 0; left: 0; width: 100%;
-            background: #111; color: #eee; font-size: 12px; letter-spacing: 8px; text-align: center; line-height: 12px;
+            content: "••••••••••••"; position: absolute; top: 0; left: 0; width: 100%;
+            background: #111; color: #fff; font-size: 12px; letter-spacing: 10px; text-align: center; line-height: 12px;
         }
 
-        .photo-box { width: 100%; aspect-ratio: 1; background: #000; overflow: hidden; border: 1px solid #222; }
-        .photo-box img { width: 100%; height: 100%; object-fit: cover; filter: sepia(30%) contrast(1.1); }
+        .photo-box { width: 100%; aspect-ratio: 4/3; background: #000; overflow: hidden; border: 1px solid #111; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; filter: sepia(20%) grayscale(10%); }
 
-        .card-meta { margin-top: 10px; color: #333; font-size: 0.75rem; text-align: left; font-family: monospace; font-weight: bold; }
+        .card-label { margin-top: 12px; color: #444; font-size: 0.8rem; text-align: left; font-family: monospace; font-weight: bold; border-left: 2px solid var(--ms-primary); padding-left: 8px; }
 
-        /* 弹窗系统 */
+        /* 沉浸式弹窗 */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 100; display: none; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.4s;
+            opacity: 0; transition: opacity 0.5s ease;
         }
         .modal.active { display: flex; opacity: 1; }
 
         .modal-bg {
             position: absolute; width: 100%; height: 100%;
             background-size: cover; background-position: center;
-            filter: blur(20px) brightness(0.4) contrast(0.8);
+            filter: blur(25px) brightness(0.35) contrast(0.8);
             transform: scale(1.1);
         }
 
         .modal-content {
-            position: relative; z-index: 101; width: 85%; max-width: 500px;
-            text-align: center; animation: modalPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; z-index: 101; width: 90%; max-width: 600px;
+            max-height: 85vh; overflow-y: auto; padding: 20px;
+            scrollbar-width: none; /* 隐藏滚动条 */
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        .modal-img { width: 100%; border: 4px solid #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin-bottom: 25px; }
-        .modal-text { font-size: 1.1rem; line-height: 1.8; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .close-btn { margin-top: 30px; font-size: 0.8rem; letter-spacing: 2px; opacity: 0.6; text-decoration: underline; cursor: pointer; }
+        .modal-content::-webkit-scrollbar { display: none; }
 
-        /* 底部文案区 */
-        .story-wall {
-            background: var(--glass-white); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            padding: 40px 25px; border-radius: 2px; border-left: 3px solid var(--ms-primary);
-            text-align: left; margin-top: 40px;
+        .modal-img-wrap { width: 100%; border: 5px solid #fff; box-shadow: 0 20px 60px rgba(0,0,0,0.8); margin-bottom: 30px; }
+        .modal-img { width: 100%; display: block; }
+
+        .modal-story { 
+            font-size: 1.15rem; line-height: 2; color: #fff; 
+            text-align: justify; text-shadow: 0 2px 15px rgba(0,0,0,0.8);
+            white-space: pre-line; letter-spacing: 1px;
+            padding: 0 10px;
         }
-        .story-wall p { white-space: pre-line; font-size: 1rem; opacity: 0.9; }
+        .modal-story::first-letter { font-size: 2rem; color: var(--ms-primary); float: left; margin-right: 8px; line-height: 1; }
 
-        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .close-hint { margin-top: 40px; font-size: 0.75rem; opacity: 0.5; letter-spacing: 2px; cursor: pointer; }
+
+        /* 底部 */
+        .footer-wall { margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 1rem; font-style: italic; opacity: 0.8; }
+
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         @media (max-width: 600px) {
-            .film-grid { grid-template-columns: 1fr; gap: 40px; }
             h1 { font-size: 1.8rem; }
+            .modal-story { font-size: 1rem; }
         }
     </style>
 </head>
@@ -110,62 +116,60 @@
     </header>
 
     <div class="film-grid">
-        <div class="film-card" onclick="openModal('{{ img_1 }}', '{{ cap_1 }}')">
+        <div class="film-card" onclick="openStory('{{ img_1 }}', `{{ story_1 }}`)">
             <div class="photo-box">
-                <img src="{{ img_1 }}" alt="film1">
+                <img src="{{ img_1 }}" alt="memory">
             </div>
-            <div class="card-meta">DATE: {{ memory_date_1 }}</div>
+            <div class="card-label">{{ date_1 }}</div>
         </div>
 
-        <div class="film-card" onclick="openModal('{{ img_2 }}', '{{ cap_2 }}')">
+        <div class="film-card" onclick="openStory('{{ img_2 }}', `{{ story_2 }}`)">
             <div class="photo-box">
-                <img src="{{ img_2 }}" alt="film2">
+                <img src="{{ img_2 }}" alt="memory">
             </div>
-            <div class="card-meta">DATE: {{ memory_date_2 }}</div>
+            <div class="card-label">{{ date_2 }}</div>
         </div>
     </div>
 
-    <div class="story-wall">
-        <p>{{ story_text }}</p>
+    <div class="footer-wall">
+        <p>{{ footer_text }}</p>
     </div>
-
-    <footer style="margin-top: 60px; font-size: 0.7rem; opacity: 0.3; letter-spacing: 2px;">
-        DESIGNED FOR MOOD SPACE
-    </footer>
 </div>
 
-<div id="photoModal" class="modal" onclick="closeModal()">
+<div id="storyModal" class="modal" onclick="closeStory()">
     <div id="modalBg" class="modal-bg"></div>
     <div class="modal-content">
-        <img id="modalImg" class="modal-img" src="" alt="Zoomed">
-        <div id="modalText" class="modal-text"></div>
-        <div class="close-btn">点击任意处关闭</div>
+        <div class="modal-img-wrap">
+            <img id="modalImg" class="modal-img" src="" alt="Full size">
+        </div>
+        <article id="modalStory" class="modal-story"></article>
+        <div class="close-hint">— 点击任意位置返回墙面 —</div>
     </div>
 </div>
 
 <script>
-    function openModal(imgUrl, text) {
-        const modal = document.getElementById('photoModal');
+    function openStory(imgUrl, storyText) {
+        const modal = document.getElementById('storyModal');
         const modalImg = document.getElementById('modalImg');
         const modalBg = document.getElementById('modalBg');
-        const modalText = document.getElementById('modalText');
+        const modalStory = document.getElementById('modalStory');
 
         modalImg.src = imgUrl;
         modalBg.style.backgroundImage = `url('${imgUrl}')`;
-        modalText.innerText = text;
+        modalStory.innerText = storyText;
         
         modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // 禁止滚动
+        document.body.style.overflow = 'hidden'; // 防止背景滚动
     }
 
-    function closeModal() {
-        const modal = document.getElementById('photoModal');
+    function closeStory() {
+        const modal = document.getElementById('storyModal');
         modal.style.opacity = '0';
         setTimeout(() => {
             modal.classList.remove('active');
             modal.style.opacity = '1';
             document.body.style.overflow = ''; 
-        }, 400);
+        }, 500);
     }
 </script>
 
