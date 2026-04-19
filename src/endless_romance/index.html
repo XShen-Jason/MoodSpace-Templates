@@ -2,200 +2,1051 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>{{title}}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Our Endless Romance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="description" content="在这颗温柔星球上，我们把每一次心跳都存档。" />
   <style>
     :root {
-      /* 注入用户配置的颜色 */
-      --primary: {{color_primary}};
-      --accent: {{color_accent}};
-      --bg-image: url("{{bg_image_url}}");
-      
-      /* 固定 UI 常量 */
-      --glass-bg: rgba(255, 255, 255, 0.12);
-      --glass-border: rgba(255, 255, 255, 0.25);
+      --primary: #FF9A9E;
+      --secondary: #FAD0C4;
+      --bg-image: url("https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg");
+      --glass-bg: rgba(255, 255, 255, 0.17);
+      --glass-border: rgba(255, 255, 255, 0.35);
       --text-main: #ffffff;
-      --text-sub: rgba(255, 255, 255, 0.7);
-      --radius-premium: 24px;
+      --text-sub: rgba(255, 255, 255, 0.75);
+      --shadow-soft: 0 18px 45px rgba(15, 15, 40, 0.65);
+      --radius-lg: 26px;
+      --transition-fast: 220ms ease-out;
+      --transition-slow: 480ms cubic-bezier(0.19, 1, 0.22, 1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
 
     body {
-      font-family: -apple-system, "SF Pro Text", system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
       color: var(--text-main);
-      background-color: #0b1020;
-      background-image: linear-gradient(135deg, #0b1020 0%, #1a1a2e 100%);
-      min-height: 100vh;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 182, 193, 0.35), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(186, 85, 211, 0.45), transparent 55%),
+        linear-gradient(135deg, #0b1020, #191326, #260f30);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
       overflow-x: hidden;
     }
 
-    /* 全屏背景图层 */
-    .ms-bg-wrap {
-      position: fixed; inset: 0; z-index: -1;
+    .bg-layer {
+      position: fixed;
+      inset: 0;
       background-image: var(--bg-image);
       background-size: cover;
       background-position: center;
-      opacity: 0.4;
-      filter: saturate(1.2) blur(2px);
-    }
-    .ms-bg-overlay {
-      position: fixed; inset: 0; z-index: -1;
-      background: radial-gradient(circle at top left, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+      opacity: 0.36;
+      filter: saturate(1.15) contrast(1.05);
+      z-index: -3;
     }
 
-    .app-container {
-      max-width: 600px; margin: 0 auto;
-      padding: 30px 20px 80px;
-      display: flex; flex-direction: column; gap: 24px;
+    .bg-gradient-overlay {
+      position: fixed;
+      inset: -40px;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255, 192, 203, 0.8), transparent 60%),
+        radial-gradient(circle at 85% 80%, rgba(255, 105, 180, 0.7), transparent 55%),
+        linear-gradient(145deg, rgba(23, 9, 42, 0.96), rgba(9, 12, 32, 0.98));
+      mix-blend-mode: soft-light;
+      opacity: 0.98;
+      z-index: -2;
     }
 
-    /* 顶部导航 */
-    header { display: flex; justify-content: space-between; align-items: center; }
-    .logo-box { display: flex; align-items: center; gap: 10px; }
-    .logo-circle {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(45deg, var(--primary), var(--accent));
-      box-shadow: 0 0 15px var(--primary);
-    }
-    .badge {
-      background: var(--glass-bg); padding: 5px 12px;
-      border-radius: 20px; border: 1px solid var(--glass-border);
-      font-size: 11px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    .bg-noise {
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.06) 0, transparent 70%),
+        radial-gradient(circle at 100% 100%, rgba(0,0,0,0.16) 0, transparent 60%);
+      mix-blend-mode: overlay;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: -1;
     }
 
-    /* 核心卡片样式 */
-    .premium-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(25px) saturate(1.5);
-      -webkit-backdrop-filter: blur(25px) saturate(1.5);
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 18px 16px 28px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding: 6px 2px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 210deg, var(--primary), var(--secondary), #ffe4f5, var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.25), 0 10px 25px rgba(0,0,0,0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-logo::after {
+      content: "";
+      position: absolute;
+      width: 140%;
+      height: 140%;
+      background: radial-gradient(circle at 30% 0%, rgba(255,255,255,0.7), transparent 45%);
+      opacity: 0.85;
+      mix-blend-mode: screen;
+    }
+
+    .brand-logo-heart {
+      width: 13px;
+      height: 13px;
+      position: relative;
+      transform: translateY(1px);
+    }
+
+    .brand-logo-heart::before,
+    .brand-logo-heart::after {
+      content: "";
+      position: absolute;
+      width: 50%;
+      height: 75%;
+      background: #fff;
+      border-radius: 50px 50px 0 0;
+      top: 0;
+    }
+
+    .brand-logo-heart::before {
+      left: 0;
+      transform: rotate(-45deg) translateX(14%);
+      transform-origin: bottom right;
+    }
+
+    .brand-logo-heart::after {
+      right: 0;
+      transform: rotate(45deg) translateX(-14%);
+      transform-origin: bottom left;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-name {
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(255,255,255,0.35);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.28), transparent 68%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      color: rgba(255,255,255,0.85);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #7cfcff 0, #00f5a0 60%, transparent 100%);
+      box-shadow: 0 0 12px rgba(125, 249, 255, 0.9);
+      animation: pulse-dot 1.8s ease-out infinite;
+    }
+
+    .music-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      background: radial-gradient(circle at 30% 0%, rgba(255,255,255,0.4), transparent 60%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.85);
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+    }
+
+    .music-toggle:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.75);
+      border-color: rgba(255,255,255,0.7);
+    }
+
+    .music-toggle.is-playing {
+      border-color: rgba(144, 238, 144, 0.95);
+      box-shadow: 0 0 0 1px rgba(152, 251, 152, 0.65), 0 18px 44px rgba(0,0,0,0.8);
+    }
+
+    .music-toggle-icon {
+      font-size: 16px;
+      line-height: 1;
+      transform-origin: center;
+      transition: transform 260ms ease-out;
+    }
+
+    .music-toggle.is-playing .music-toggle-icon {
+      transform: scale(1.06);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .card {
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05));
       border: 1px solid var(--glass-border);
-      border-radius: var(--radius-premium);
-      padding: 24px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-      animation: fadeInUp 0.8s ease-out;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(26px) saturate(1.4);
+      -webkit-backdrop-filter: blur(26px) saturate(1.4);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
     }
 
-    .hero-title { font-size: 28px; line-height: 1.2; margin-bottom: 12px; font-weight: 700; }
-    .hero-title span { background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; color: transparent; }
-    
-    .subtitle { font-size: 14px; color: var(--text-sub); margin-bottom: 24px; line-height: 1.6; }
-
-    /* 交互按钮 */
-    .main-btn {
-      background: linear-gradient(to right, var(--primary), var(--accent));
-      color: #000; border: none; width: 100%; padding: 16px;
-      border-radius: 16px; font-weight: 600; font-size: 15px;
-      cursor: pointer; transition: transform 0.2s;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(255,192,203,0.3), transparent 60%);
+      mix-blend-mode: soft-light;
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
     }
-    .main-btn:active { transform: scale(0.97); }
 
-    /* 故事区 */
+    .card.hero-card {
+      padding: 22px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      animation: float-in var(--transition-slow) 60ms both;
+    }
+
+    .hero-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .hero-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.88);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.35), transparent 70%);
+    }
+
+    .hero-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: radial-gradient(circle, var(--primary) 0, var(--secondary) 60%, transparent 100%);
+      box-shadow: 0 0 10px rgba(255,182,193,0.9);
+      animation: glow 2.8s ease-in-out infinite;
+    }
+
+    .hero-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .hero-title {
+      font-size: 28px;
+      line-height: 1.18;
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+      text-shadow: 0 6px 25px rgba(0,0,0,0.9);
+    }
+
+    .hero-title span.highlight {
+      background: linear-gradient(120deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: none;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .hero-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.78);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .hero-meta-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .hero-meta-value {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta-tag {
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      font-size: 11px;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.22), transparent 70%);
+      color: rgba(255,255,255,0.9);
+      white-space: nowrap;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), color var(--transition-fast), opacity var(--transition-fast);
+      outline: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background-image: linear-gradient(115deg, var(--primary), var(--secondary));
+      color: #200820;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255,255,255,0.55), transparent 40%, transparent 60%, rgba(255,255,255,0.55));
+      opacity: 0;
+      transform: translateX(-20%);
+      pointer-events: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 17px 40px rgba(0,0,0,0.9);
+    }
+
+    .btn-primary:hover::after {
+      opacity: 1;
+      animation: shimmer 1200ms linear;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.9);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.75);
+    }
+
+    .btn-icon {
+      font-size: 14px;
+    }
+
+    .hero-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .hero-progress {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.24);
+      position: relative;
+    }
+
+    .hero-progress-bar {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(120deg, var(--primary), var(--secondary));
+      transform-origin: left;
+      transform: scaleX(0.82);
+      animation: breathe 4.2s ease-in-out infinite;
+    }
+
+    .hero-label-soft {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr);
+      gap: 14px;
+    }
+
+    .card.story-card {
+      padding: 18px 16px 16px;
+      animation: float-in var(--transition-slow) 110ms both;
+    }
+
+    .card.detail-card {
+      padding: 18px 16px 16px;
+      animation: float-in var(--transition-slow) 160ms both;
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .section-title span.accent {
+      background: linear-gradient(120deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .section-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+    }
+
     .story-content {
-      font-size: 15px; line-height: 1.8; color: rgba(255,255,255,0.9);
+      font-size: 13px;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.9);
       white-space: pre-line;
     }
 
-    /* 详细列表 */
-    .meta-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .meta-item { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
-    .meta-label { font-size: 12px; color: var(--text-sub); text-transform: uppercase; }
-    .meta-value { font-size: 13px; font-weight: 500; }
-
-    /* 相册滚动 */
-    .gallery-container {
-      margin-top: 10px; overflow-x: auto;
-      display: flex; gap: 12px; padding-bottom: 10px;
-      scrollbar-width: none;
-    }
-    .gallery-container::-webkit-scrollbar { display: none; }
-    .gallery-img {
-      flex: 0 0 120px; height: 160px; border-radius: 16px;
-      object-fit: cover; border: 1px solid var(--glass-border);
+    .detail-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 4px 0 0;
     }
 
-    footer { text-align: center; font-size: 10px; color: var(--text-sub); letter-spacing: 2px; }
+    .detail-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .detail-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      margin-top: 6px;
+      background: radial-gradient(circle, var(--secondary), transparent 70%);
+      box-shadow: 0 0 12px rgba(255,182,193,0.8);
+      flex-shrink: 0;
+    }
+
+    .detail-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 2px;
+    }
+
+    .detail-value {
+      font-size: 13px;
+      color: rgba(255,255,255,0.95);
+    }
+
+    .gallery {
+      margin-top: 12px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.35);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.18), transparent 65%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: relative;
+    }
+
+    .gallery-track {
+      display: flex;
+      gap: 8px;
+      padding: 10px 10px 10px 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    .gallery-item {
+      flex: 0 0 auto;
+      width: 92px;
+      height: 92px;
+      border-radius: 14px;
+      background-position: center;
+      background-size: cover;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.7);
+      transform-origin: center;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+    }
+
+    .gallery-item::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(0,0,0,0.16), rgba(255,255,255,0.08));
+      mix-blend-mode: soft-light;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.9);
+    }
+
+    .gallery-hint {
+      position: absolute;
+      right: 10px;
+      bottom: 8px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(10,10,24,0.78);
+      color: rgba(255,255,255,0.88);
+      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+    }
+
+    .gallery-hint::before {
+      content: "⇆";
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    footer {
+      margin-top: 18px;
+      padding: 8px 4px 2px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .footer-left span {
+      opacity: 0.9;
+    }
+
+    .footer-right {
+      text-align: right;
+    }
+
+    .footer-right span {
+      background: linear-gradient(120deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.35); opacity: 1; }
+    }
+
+    @keyframes float-in {
+      0% {
+        opacity: 0;
+        transform: translateY(26px) scale(0.98);
+        filter: blur(6px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 12px rgba(255, 192, 203, 0.7); }
+      50% { box-shadow: 0 0 22px rgba(255, 192, 203, 1); }
+    }
+
+    @keyframes shimmer {
+      0% {
+        opacity: 0;
+        transform: translateX(-60%);
+      }
+      40% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(40%);
+      }
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scaleX(0.82); opacity: 0.9; }
+      50% { transform: scaleX(1); opacity: 1; }
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        padding: 26px 38px 30px;
+      }
+
+      header {
+        margin-bottom: 26px;
+      }
+
+      main {
+        gap: 22px;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.05fr);
+        gap: 18px;
+      }
+
+      .info-grid {
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
+        gap: 18px;
+      }
+
+      .card.hero-card {
+        padding: 26px 24px 22px;
+      }
+
+      .card.story-card,
+      .card.detail-card {
+        padding: 22px 20px 20px;
+      }
+
+      .hero-title {
+        font-size: 34px;
+      }
+
+      .hero-subtitle {
+        font-size: 15px;
+      }
+
+      .story-content {
+        font-size: 14px;
+      }
+
+      .detail-value {
+        font-size: 14px;
+      }
+
+      footer {
+        padding-inline: 2px;
+        font-size: 12px;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .page {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding-inline: 40px;
+      }
+
+      .hero-title {
+        font-size: 38px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .hero-title {
+        font-size: 24px;
+      }
+      .hero-subtitle {
+        font-size: 13px;
+      }
+      .hero-actions {
+        flex-direction: column;
+      }
+      .btn-primary,
+      .btn-ghost {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="ms-bg-wrap"></div>
-  <div class="ms-bg-overlay"></div>
+  <div class="bg-layer"></div>
+  <div class="bg-gradient-overlay"></div>
+  <div class="bg-noise"></div>
 
-  <div class="app-container">
+  <div class="page">
     <header>
-      <div class="logo-box">
-        <div class="logo-circle"></div>
-        <div style="font-weight: 600; font-size: 14px; letter-spacing: 1px;">ROMANCE SPACE</div>
-      </div>
-      <div class="badge">EST. {{date}}</div>
-    </header>
-
-    <main class="premium-card">
-      <h1 class="hero-title">{{title}}<br><span>{{couple_names}}</span></h1>
-      <p class="subtitle">{{subtitle}}</p>
-      
-      <div class="meta-list">
-        <div class="meta-item">
-          <span class="meta-label">Location</span>
-          <span class="meta-value">{{location}}</span>
+      <div class="brand">
+        <div class="brand-logo">
+          <div class="brand-logo-heart"></div>
         </div>
-        <div class="meta-item">
-          <span class="meta-label">Moment</span>
-          <span class="meta-value">{{date}}</span>
+        <div class="brand-text">
+          <div class="brand-name">ROMANCE SPACE</div>
+          <div class="brand-sub">Moments of us, softly framed.</div>
         </div>
       </div>
-
-      <div style="margin-top: 24px;">
-        <button class="main-btn" onclick="document.getElementById('story-sec').scrollIntoView({behavior:'smooth'})">
-          {{button_text}}
+      <div class="header-actions">
+        <div class="chip">
+          <span class="chip-dot"></span>
+          <span>极致浪漫 · 私密空间</span>
+        </div>
+        <button class="music-toggle" id="musicToggle" aria-label="切换背景音乐">
+          <span class="music-toggle-icon" id="musicToggleIcon">♫</span>
         </button>
       </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <article class="card hero-card">
+          <div>
+            <div class="hero-badge-row">
+              <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                <span>Romantic Chapter</span>
+              </div>
+              <div class="hero-date">2026 · 05 · 20</div>
+            </div>
+
+            <h1 class="hero-title">
+              Our Endless Romance<br />
+              <span class="highlight">You &amp; Me</span>
+            </h1>
+
+            <p class="hero-subtitle">
+              在这颗温柔星球上，我们把每一次心跳都存档。
+            </p>
+
+            <div class="hero-meta">
+              <div>
+                <div class="hero-meta-label">Location</div>
+                <div class="hero-meta-value">Somewhere only we know</div>
+              </div>
+              <div>
+                <div class="hero-meta-label">Our Promise</div>
+                <div class="hero-meta-value">
+                  <span class="hero-meta-tag">Always yours</span>
+                  <span class="hero-meta-tag">Endlessly in love</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-actions">
+              <button class="btn-primary" id="scrollStoryBtn">
+                <span class="btn-icon">♡</span>
+                <span>轻轻落入这段故事</span>
+              </button>
+              <button class="btn-ghost" id="scrollGalleryBtn">
+                <span class="btn-icon">⋯</span>
+                <span>回顾故事片段</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="hero-footer">
+            <div class="hero-progress">
+              <div class="hero-progress-bar"></div>
+            </div>
+            <div class="hero-label-soft">
+              <div>Love orbiting · 2026 · 05 · 20</div>
+            </div>
+          </div>
+        </article>
+
+        <aside class="card story-card" id="storyCard">
+          <div class="section-title-row">
+            <div class="section-title">
+              <span class="accent">Our Story</span> 离心轨迹
+            </div>
+            <div class="section-sub">从第一眼，到一生。</div>
+          </div>
+          <div class="story-content">
+            那天晚上的风很轻，你站在光里，也走进了我的心里。
+            从那之后，日落变得柔软，星星都有了名字。
+          </div>
+        </aside>
+      </section>
+
+      <section class="info-grid" id="gallerySection">
+        <article class="card detail-card">
+          <div class="section-title-row">
+            <div class="section-title">
+              <span class="accent">Details</span> 轻声标记
+            </div>
+            <div class="section-sub">时间、坐标，以及只属于你们的暗号。</div>
+          </div>
+          <ul class="detail-list">
+            <li class="detail-item">
+              <div class="detail-dot"></div>
+              <div>
+                <div class="detail-label">Date</div>
+                <div class="detail-value">2026 · 05 · 20</div>
+              </div>
+            </li>
+            <li class="detail-item">
+              <div class="detail-dot"></div>
+              <div>
+                <div class="detail-label">Location</div>
+                <div class="detail-value">Somewhere only we know</div>
+              </div>
+            </li>
+            <li class="detail-item">
+              <div class="detail-dot"></div>
+              <div>
+                <div class="detail-label">For</div>
+                <div class="detail-value">You &amp; Me</div>
+              </div>
+            </li>
+          </ul>
+        </article>
+
+        <aside class="card detail-card">
+          <div class="section-title-row">
+            <div class="section-title">
+              <span class="accent">Gallery</span> 光影纪念
+            </div>
+            <div class="section-sub">让每一帧，都慢一点落在心上。</div>
+          </div>
+
+          <div class="gallery">
+            <div class="gallery-track" id="galleryTrack">
+            </div>
+            <div class="gallery-hint">左右滑动，观看更多记忆</div>
+          </div>
+        </aside>
+      </section>
     </main>
 
-    <section class="premium-card" id="story-sec">
-      <div style="font-size: 11px; color: var(--primary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;">Our Story</div>
-      <div class="story-content">{{story}}</div>
-    </section>
-
-    <section class="premium-card">
-      <div style="font-size: 11px; color: var(--primary); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px;">Memory Gallery</div>
-      <div class="gallery-container" id="ms-gallery">
-        </div>
-      <div style="font-size: 9px; color: var(--text-sub); text-align: center; margin-top: 10px;">← 左右滑动浏览回忆 →</div>
-    </section>
-
     <footer>
-      &copy; ROMANCE SPACE · 打造极致浪漫单页
+      <div class="footer-left">
+        <span>Crafted for You &amp; Me</span>
+      </div>
+      <div class="footer-right">
+        <span>浪漫空间 · RomanceSpace</span>
+      </div>
     </footer>
   </div>
 
+  <audio
+    id="bgm"
+    src=""
+    loop
+    preload="auto"
+  ></audio>
+
   <script>
-    // 处理图库图片列表变量
-    (function initGallery() {
-      const container = document.getElementById('ms-gallery');
-      const rawUrls = `{{gallery_images}}`;
-      
-      // 按照换行或逗号分割，过滤空行
-      const urls = rawUrls.split(/[\n,]/).map(url => url.trim()).filter(url => url.length > 5);
-      
-      if (urls.length === 0) {
-        container.parentElement.style.display = 'none';
-        return;
+    (function () {
+      const scrollStoryBtn = document.getElementById("scrollStoryBtn");
+      const scrollGalleryBtn = document.getElementById("scrollGalleryBtn");
+      const storyCard = document.getElementById("storyCard");
+      const gallerySection = document.getElementById("gallerySection");
+      const musicToggle = document.getElementById("musicToggle");
+      const musicToggleIcon = document.getElementById("musicToggleIcon");
+      const bgm = document.getElementById("bgm");
+      const galleryTrack = document.getElementById("galleryTrack");
+
+      function smoothScrollTo(element) {
+        if (!element) return;
+        const top = element.getBoundingClientRect().top + window.scrollY - 60;
+        window.scrollTo({
+          top: top,
+          behavior: "smooth"
+        });
       }
 
-      urls.forEach(url => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.className = 'gallery-img';
-        img.loading = 'lazy';
-        container.appendChild(img);
+      if (scrollStoryBtn && storyCard) {
+        scrollStoryBtn.addEventListener("click", function () {
+          smoothScrollTo(storyCard);
+        });
+      }
+
+      if (scrollGalleryBtn && gallerySection) {
+        scrollGalleryBtn.addEventListener("click", function () {
+          smoothScrollTo(gallerySection);
+        });
+      }
+
+      let isPlaying = false;
+
+      function updateMusicIcon() {
+        musicToggleIcon.textContent = isPlaying ? "♪" : "♫";
+        musicToggle.classList.toggle("is-playing", isPlaying);
+      }
+
+      function tryPlayAudio() {
+        if (!bgm) return;
+        bgm.volume = 0.88;
+        const playPromise = bgm.play();
+        if (playPromise && typeof playPromise.then === "function") {
+          playPromise.then(function () {
+            isPlaying = true;
+            updateMusicIcon();
+          }).catch(function () {
+            isPlaying = false;
+            updateMusicIcon();
+          });
+        } else {
+          isPlaying = true;
+          updateMusicIcon();
+        }
+      }
+
+      if (musicToggle && bgm) {
+        musicToggle.addEventListener("click", function () {
+          if (!isPlaying) {
+            tryPlayAudio();
+          } else {
+            bgm.pause();
+            isPlaying = false;
+            updateMusicIcon();
+          }
+        });
+      }
+
+      document.addEventListener("click", function once() {
+        if (!isPlaying) {
+          tryPlayAudio();
+        }
+        document.removeEventListener("click", once);
       });
+
+      (function initGallery() {
+        if (!galleryTrack) return;
+        var urls = [
+          "https://images.pexels.com/photos/556667/pexels-photo-556667.jpeg",
+          "https://images.pexels.com/photos/1024992/pexels-photo-1024992.jpeg",
+          "https://images.pexels.com/photos/3656339/pexels-photo-3656339.jpeg"
+        ];
+
+        urls.forEach(function (url) {
+          var item = document.createElement("div");
+          item.className = "gallery-item";
+          item.style.backgroundImage = "url('" + url.replace(/'/g, "\\'") + "')";
+          galleryTrack.appendChild(item);
+        });
+      })();
     })();
   </script>
 </body>
