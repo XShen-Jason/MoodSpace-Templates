@@ -1,27 +1,246 @@
-<div class="achievement-grid">
-    <div class="ac-card" onclick="openModal('{{ ac_1_title }}', '{{ ac_1_msg }}', '{{ ac_1_img }}')">
-        <div class="ac-icon">{{ ac_1_icon }}</div>
-        <div style="font-size: 0.9rem;">{{ ac_1_title }}</div>
-    </div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>LOVE RPG SUPREME</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pixel-green: #4ade80;
+            --pixel-orange: #fb923c;
+            --pixel-black: #1a1a1a;
+            --pixel-white: #f5f5f5;
+            --pixel-gray: #d1d5db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: #2d5a27;
+            /* 像素草地背景纹理 */
+            background-image: repeating-conic-gradient(#356a2e 0% 25%, #2d5a27 0% 50%) 50% / 40px 40px;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            display: flex; justify-content: center; min-height: 100vh; padding: 20px;
+            overflow-x: hidden;
+            color: var(--pixel-black);
+        }
+
+        /* 游戏主容器 */
+        .game-ui {
+            width: 100%; max-width: 480px;
+            background: var(--pixel-white);
+            border: 4px solid var(--pixel-black);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+            display: flex; flex-direction: column;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* 顶部状态栏 */
+        .status-bar {
+            background: var(--pixel-black); color: white; padding: 12px 16px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .hp-container { width: 120px; }
+        .hp-label { font-size: 10px; text-align: right; margin-bottom: 2px; color: var(--pixel-green); }
+        .hp-border { border: 2px solid #fff; height: 14px; padding: 1px; }
+        .hp-fill { 
+            width: 95%; height: 100%; background: var(--pixel-green); 
+            animation: hpBreathe 2s infinite; 
+        }
+
+        .player-info { font-size: 13px; line-height: 1.4; }
+
+        /* 活动时间栏 */
+        .days-bar { 
+            padding: 8px 16px; background: var(--pixel-gray); 
+            font-size: 12px; border-bottom: 2px solid var(--pixel-black);
+            display: flex; justify-content: space-between;
+        }
+
+        /* 成就网格 */
+        .achievement-grid {
+            padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+
+        .ac-card {
+            border: 3px solid var(--pixel-black); padding: 12px; text-align: center;
+            background: #fff; cursor: pointer; transition: 0.1s;
+            box-shadow: 4px 4px 0 var(--pixel-black);
+        }
+
+        .ac-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--pixel-black); }
+
+        .ac-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+        .ac-name { font-size: 14px; font-weight: bold; }
+
+        /* 系统对话框 */
+        .sys-msg-box {
+            margin: 10px 16px 20px; padding: 12px;
+            border: 2px solid var(--pixel-black); background: #fff;
+            font-size: 13px; position: relative; line-height: 1.5;
+        }
+        .sys-msg-box::after { 
+            content: "▼"; position: absolute; bottom: 4px; right: 8px; 
+            font-size: 10px; animation: blink 1s infinite; 
+        }
+
+        /* 像素大按钮 */
+        .btn-wrap { padding: 0 16px 20px; }
+        .pixel-btn {
+            width: 100%; padding: 16px; background: var(--pixel-orange);
+            border: 4px solid var(--pixel-black); border-radius: 0;
+            box-shadow: 0 6px 0 #c2410c; color: white; font-size: 1.2rem;
+            cursor: pointer; text-shadow: 2px 2px var(--pixel-black);
+            font-family: inherit; transition: 0.1s;
+        }
+        .pixel-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #c2410c; }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; align-items: center; justify-content: center;
+            z-index: 100; padding: 20px;
+        }
+
+        .modal-body {
+            background: var(--pixel-white); border: 4px solid var(--pixel-black);
+            width: 100%; max-width: 400px; padding: 20px;
+            animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .m-title { font-size: 1.4rem; color: var(--pixel-orange); text-align: center; margin-bottom: 15px; }
+        .m-img-frame { 
+            width: 100%; aspect-ratio: 4/3; background: #000; 
+            border: 2px solid var(--pixel-black); margin-bottom: 15px;
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .m-img-frame img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+        .m-text { font-size: 14px; line-height: 1.7; margin-bottom: 20px; white-space: pre-line; }
+
+        /* 主告白特供样式 */
+        .confession-box { background: #fff; border: 4px solid var(--pixel-black); box-shadow: 8px 8px 0 var(--pixel-orange); }
+        .confession-head { background: var(--pixel-black); color: #fff; padding: 8px; text-align: center; margin-bottom: 15px; }
+
+        /* 动画 */
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes hpBreathe { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .close-footer { 
+            width: 100%; padding: 10px; background: var(--pixel-black); 
+            color: white; border: none; font-family: inherit; cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="game-ui">
+        <div class="status-bar">
+            <div class="player-info">
+                P: {{player_name}}<br>
+                LV: {{love_level}}
+            </div>
+            <div class="hp-container">
+                <div class="hp-label">LOVE HP</div>
+                <div class="hp-border"><div class="hp-fill"></div></div>
+            </div>
+        </div>
+
+        <div class="days-bar">
+            <span>STATUS: MARRYING</span>
+            <span>DAY: {{love_days}}</span>
+        </div>
+
+        <div class="achievement-grid">
+            <div class="ac-card" data-title="{{ac_1_title}}" data-msg="{{ac_1_msg}}" data-img="{{ac_1_img}}" onclick="openAc(this)">
+                <span class="ac-icon">{{ac_1_icon}}</span>
+                <span class="ac-name">{{ac_1_title}}</span>
+            </div>
+            <div class="ac-card" data-title="{{ac_2_title}}" data-msg="{{ac_2_msg}}" data-img="{{ac_2_img}}" onclick="openAc(this)">
+                <span class="ac-icon">{{ac_2_icon}}</span>
+                <span class="ac-name">{{ac_2_title}}</span>
+            </div>
+            <div class="ac-card" data-title="{{ac_3_title}}" data-msg="{{ac_3_msg}}" data-img="{{ac_3_img}}" onclick="openAc(this)">
+                <span class="ac-icon">{{ac_3_icon}}</span>
+                <span class="ac-name">{{ac_3_title}}</span>
+            </div>
+            <div class="ac-card" data-title="{{ac_4_title}}" data-msg="{{ac_4_msg}}" data-img="{{ac_4_img}}" onclick="openAc(this)">
+                <span class="ac-icon">{{ac_4_icon}}</span>
+                <span class="ac-name">{{ac_4_title}}</span>
+            </div>
+        </div>
+
+        <div class="sys-msg-box">
+            <p>{{system_msg}}</p>
+        </div>
+
+        <div class="btn-wrap">
+            <button class="pixel-btn" onclick="openMainModal()">{{main_btn_text}}</button>
+        </div>
     </div>
 
-<script>
-    function openModal(title, msg, imgUrl) {
-        document.getElementById('mTitle').innerText = title;
-        document.getElementById('mBody').innerText = msg;
-        
-        // 关键：建造机会将 {{ac_x_img}} 替换为绝对路径。
-        // 我们只需处理“未上传”时的兜底图片逻辑。
-        const mImg = document.getElementById('mImg');
-        
-        if (imgUrl && imgUrl !== '' && imgUrl !== 'placeholder.png') {
-            mImg.src = imgUrl;
-            mImg.style.display = 'block';
-        } else {
-            // 如果用户没传图，可以展示一个统一的像素占位图或直接隐藏
-            mImg.src = 'https://via.placeholder.com/400x300.png?text=Pixel+Memory';
+    <div id="acModal" class="modal-overlay" onclick="closeAllModals(event)">
+        <div class="modal-body">
+            <h2 id="m-title" class="m-title">成就达成</h2>
+            <div class="m-img-frame">
+                <img id="m-img" src="" alt="Memory">
+            </div>
+            <p id="m-text" class="m-text"></p>
+            <button class="close-footer" onclick="hideModal('acModal')">返回游戏</button>
+        </div>
+    </div>
+
+    <div id="mainModal" class="modal-overlay" onclick="closeAllModals(event)">
+        <div class="modal-body confession-box">
+            <div class="confession-head">{{main_confession_title}}</div>
+            <p class="m-text" style="margin-top: 10px;">{{main_confession_msg}}</p>
+            <button class="pixel-btn" style="font-size: 1rem; padding: 10px;" onclick="hideModal('mainModal')">确认连接 (OK)</button>
+        </div>
+    </div>
+
+    <script>
+        // 处理成就卡片点击
+        function openAc(el) {
+            const title = el.getAttribute('data-title');
+            const msg = el.getAttribute('data-msg');
+            const img = el.getAttribute('data-img');
+
+            document.getElementById('m-title').innerText = title;
+            document.getElementById('m-text').innerText = msg;
+            
+            const imgDom = document.getElementById('m-img');
+            // 解决图片路径问题：判断是否为占位符或空
+            if (img && img !== 'placeholder.png' && img.length > 5) {
+                imgDom.src = img;
+            } else {
+                imgDom.src = 'https://via.placeholder.com/400x300.png?text=MEMORY+PIXEL';
+            }
+
+            document.getElementById('acModal').style.display = 'flex';
         }
-        
-        document.getElementById('pixelModal').style.display = 'flex';
-    }
-</script>
+
+        // 打开主告白
+        function openMainModal() {
+            document.getElementById('mainModal').style.display = 'flex';
+            // 简单震动反馈
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+
+        // 关闭弹窗
+        function hideModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // 点击背景关闭
+        function closeAllModals(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
